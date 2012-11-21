@@ -4,6 +4,7 @@ zope.exceptions Changelog
 4.0.2 (unreleased)
 ------------------
 
+- Test Python 3.3 support under tox.
 
 4.0.1 (2012-08-20)
 ------------------
