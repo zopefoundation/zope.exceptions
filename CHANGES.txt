@@ -1,7 +1,7 @@
 zope.exceptions Changelog
 =========================
 
-4.0.3 (unreleased)
+4.0.3 (2012-12-10)
 ------------------
 
 - Fixed format_exception(..., as_html=True) not to HTML-escape the '<br />'
