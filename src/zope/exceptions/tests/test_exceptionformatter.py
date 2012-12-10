@@ -14,6 +14,8 @@
 """ExceptionFormatter tests.
 """
 import unittest
+import doctest
+import sys
 
 
 class TextExceptionFormatterTests(unittest.TestCase):
@@ -784,11 +786,29 @@ class _Monkey(object):
                 delattr(self.module, key)
 
 
+def doctest_format_exception_as_html():
+    """Test for format_exception (as_html=True)
+
+        >>> from zope.exceptions.exceptionformatter import format_exception
+        >>> try:
+        ...     exec 'foo = '
+        ... except:
+        ...     print ''.join(format_exception(*sys.exc_info(), as_html=True)),
+        <p>Traceback (most recent call last):</p>
+        <ul>
+        <li>  Module zope.exceptions.tests.test_exceptionformatter, line 2, in &lt;module&gt;<br />
+            exec 'foo = '</li>
+        </ul><p>  File "&lt;string&gt;", line 1<br />
+            foo =<br />
+                 ^<br />
+        SyntaxError: invalid syntax<br />
+        </p>
+
+    """
+
+
 def test_suite():
-    return unittest.TestSuite((
-        unittest.makeSuite(TextExceptionFormatterTests),
-        unittest.makeSuite(HTMLExceptionFormatterTests),
-        unittest.makeSuite(Test_format_exception),
-        unittest.makeSuite(Test_print_exception),
-        unittest.makeSuite(Test_extract_stack),
-    ))
+    return unittest.TestSuite([
+        unittest.defaultTestLoader.loadTestsFromName(__name__),
+        doctest.DocTestSuite(optionflags=doctest.NORMALIZE_WHITESPACE),
+    ])

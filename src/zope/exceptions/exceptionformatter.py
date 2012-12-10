@@ -161,7 +161,7 @@ class TextExceptionFormatter(object):
 
     def formatExceptionOnly(self, etype, value):
         result = ''.join(traceback.format_exception_only(etype, value))
-        return result.replace('\n', self.line_sep)
+        return result
 
     def formatLastLine(self, exc_line):
         return self.escape(exc_line)
@@ -237,7 +237,8 @@ class HTMLExceptionFormatter(TextExceptionFormatter):
         return '<li>%s</li>' % line
 
     def formatLastLine(self, exc_line):
-        return '</ul><p>%s</p>' % self.escape(exc_line)
+        line = '</ul><p>%s</p>' % self.escape(exc_line)
+        return line.replace('\n', self.line_sep)
 
 
 def format_exception(t, v, tb, limit=None, as_html=False,
