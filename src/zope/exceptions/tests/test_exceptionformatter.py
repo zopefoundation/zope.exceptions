@@ -791,16 +791,16 @@ def doctest_format_exception_as_html():
 
         >>> from zope.exceptions.exceptionformatter import format_exception
         >>> try:
-        ...     exec 'foo = '
+        ...     exec 'import 2 + 2'
         ... except:
         ...     print ''.join(format_exception(*sys.exc_info(), as_html=True)),
         <p>Traceback (most recent call last):</p>
         <ul>
         <li>  Module zope.exceptions.tests.test_exceptionformatter, line 2, in &lt;module&gt;<br />
-            exec 'foo = '</li>
+            exec 'import 2 + 2'</li>
         </ul><p>  File "&lt;string&gt;", line 1<br />
-            foo =<br />
-                 ^<br />
+            import 2 + 2<br />
+                   ^<br />
         SyntaxError: invalid syntax<br />
         </p>
 
