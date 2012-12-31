@@ -1,10 +1,12 @@
 zope.exceptions Changelog
 =========================
 
-4.0.5 (unreleased)
+4.0.5 (2012-12-31)
 ------------------
 
-- Nothing changed yet.
+- Fleshed out PyPI Trove classifiers.
+
+- Fixed a test failure under Python 2.6.
 
 
 4.0.4 (2012-12-13)
