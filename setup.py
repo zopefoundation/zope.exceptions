@@ -31,8 +31,8 @@ setup(name='zope.exceptions',
       author='Zope Foundation and Contributors',
       author_email='zope-dev@zope.org',
       description='Zope Exceptions',
-      long_description=(read('README.txt') + '\n\n' +
-                        read('CHANGES.txt')),
+      long_description=(read('README.rst') + '\n\n' +
+                        read('CHANGES.rst')),
       keywords = 'zope exceptions',
       classifiers = [
           'Development Status :: 5 - Production/Stable',
