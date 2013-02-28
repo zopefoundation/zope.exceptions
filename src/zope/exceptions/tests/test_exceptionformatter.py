@@ -791,13 +791,13 @@ def doctest_format_exception_as_html():
 
         >>> from zope.exceptions.exceptionformatter import format_exception
         >>> try:
-        ...     exec 'import 2 + 2'
+        ...     exec('import 2 + 2')
         ... except:
-        ...     print ''.join(format_exception(*sys.exc_info(), as_html=True)),
+        ...     print(''.join(format_exception(*sys.exc_info(), as_html=True)))
         <p>Traceback (most recent call last):</p>
         <ul>
         <li>  Module zope.exceptions.tests.test_exceptionformatter, line 2, in &lt;module&gt;<br />
-            exec 'import 2 + 2'</li>
+            exec('import 2 + 2')</li>
         </ul><p>  File "&lt;string&gt;", line 1<br />
             import 2 + 2<br />
                    ^<br />
@@ -810,5 +810,6 @@ def doctest_format_exception_as_html():
 def test_suite():
     return unittest.TestSuite([
         unittest.defaultTestLoader.loadTestsFromName(__name__),
-        doctest.DocTestSuite(optionflags=doctest.NORMALIZE_WHITESPACE),
+        doctest.DocTestSuite(
+                optionflags=doctest.NORMALIZE_WHITESPACE),
     ])

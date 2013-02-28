@@ -25,6 +25,20 @@ from setuptools import setup, find_packages
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
+def alltests():
+    import os
+    import sys
+    import unittest
+    # use the zope.testrunner machinery to find all the
+    # test suites we've put under ourselves
+    import zope.testrunner.find
+    import zope.testrunner.options
+    here = os.path.abspath(os.path.join(os.path.dirname(__file__), 'src'))
+    args = sys.argv[:]
+    defaults = ["--test-path", here]
+    options = zope.testrunner.options.get_options(args, defaults)
+    suites = list(zope.testrunner.find.find_suites(options))
+    return unittest.TestSuite(suites)
 
 setup(name='zope.exceptions',
       version='4.0.6dev',
@@ -60,7 +74,10 @@ setup(name='zope.exceptions',
       install_requires=['setuptools',
                         'zope.interface',
                        ],
-      test_suite = 'zope.exceptions.tests',
+      tests_require = [
+          'zope.testrunner',
+          ],
+      test_suite = '__main__.alltests',
       include_package_data = True,
       zip_safe = False,
       extras_require = {

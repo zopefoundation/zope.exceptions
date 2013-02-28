@@ -4,7 +4,11 @@
 4.0.6 (unreleased)
 ------------------
 
-- TBD
+- Make sure that ``setup.py`` finds all tests. Now tox runs them all as well.
+
+- Fix failing test under Python 3.
+
+- Made buildout work under Python 3 and Buildout 2.
 
 
 4.0.5 (2012-12-31)
