@@ -1,6 +1,12 @@
 ``zope.exceptions`` Changelog
 =============================
 
+4.0.7 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
 4.0.6 (2013-02-28)
 ------------------
 
