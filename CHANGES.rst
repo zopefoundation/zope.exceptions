@@ -1,7 +1,7 @@
 ``zope.exceptions`` Changelog
 =============================
 
-4.0.6 (unreleased)
+4.0.6 (2013-02-28)
 ------------------
 
 - Make sure that ``setup.py`` finds all tests. Now tox runs them all as well.
