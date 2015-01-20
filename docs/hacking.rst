@@ -176,7 +176,7 @@ Setting up the buildout
    ...
    Generated script '.../bin/buildout'
    $ bin/buildout
-   Develop: '/home/tseaver/projects/Zope/BTK/exceptions/.'
+   Develop: '/home/jrandom/projects/Zope/BTK/exceptions/.'
    ...
    Generated script '.../bin/sphinx-quickstart'.
    Generated script '.../bin/sphinx-build'.
@@ -303,7 +303,7 @@ option:  you can "push" your branch to Launchpad:
 
 .. code-block:: sh
 
-   $ bzr push lp:~tseaver/zope.exceptions/cool_feature
+   $ bzr push lp:~jrandom/zope.exceptions/cool_feature
 
 After pushing your branch, you can link it to a bug report on Launchpad,
 or request that the maintainers merge your branch using the Launchpad
