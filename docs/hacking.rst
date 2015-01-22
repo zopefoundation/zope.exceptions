@@ -1,5 +1,5 @@
 Hacking on :mod:`zope.exceptions`
-================================
+=================================
 
 
 Getting the Code
@@ -270,6 +270,8 @@ including building the docs and testing their snippets:
    docs: commands succeeded
    congratulations :)
 
+Contributing to :mod:`zope.exceptions`
+######################################
 
 Submitting a Bug Report
 -----------------------
