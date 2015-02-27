@@ -15,7 +15,10 @@
 optionally in HTML.
 """
 import sys
-import cgi
+try:
+    from html import escape
+except ImportError:
+    from cgi import escape
 import linecache
 import traceback
 
@@ -213,7 +216,7 @@ class HTMLExceptionFormatter(TextExceptionFormatter):
     line_sep = '<br />\r\n'
 
     def escape(self, s):
-        return cgi.escape(s)
+        return escape(s, quote=False)
 
     def getPrefix(self):
         return '<p>Traceback (most recent call last):</p>\r\n<ul>'
