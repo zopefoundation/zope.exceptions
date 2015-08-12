@@ -228,8 +228,8 @@ class TextExceptionFormatter(object):
         if limit is not None and len(result) > limit:
             # cut out the middle part of the TB
             tocut = len(result) - limit
-            middle = len(result) / 2
-            lower = middle - tocut / 2
+            middle = len(result) // 2
+            lower = middle - tocut // 2
             msg = (template % {'omitted': tocut,
                                'limit': limit,
                                'class': self.__class__.__name__})
