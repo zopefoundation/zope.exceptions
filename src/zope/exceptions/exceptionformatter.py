@@ -205,6 +205,14 @@ class TextExceptionFormatter(object):
         __exception_formatter__ = 1
         result = []
         while f is not None:
+            if f.f_locals.get('__exception_formatter__'):
+                # Stop recursion.
+                result.append('(Recursive extractStack() stopped, '
+                              'trying traceback.format_stack)\n')
+                res = traceback.format_stack(f)
+                res.reverse()
+                result.extend(res)
+                break
             line = self.formatLine(f=f)
             result.append(line + '\n')
             f = f.f_back
