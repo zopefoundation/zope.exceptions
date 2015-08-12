@@ -113,7 +113,6 @@ class TextExceptionFormatter(object):
         locals = f.f_locals    # XXX shadowing normal builtins deliberately?
         globals = f.f_globals  # XXX shadowing normal builtins deliberately?
 
-
         if self.with_filenames:
             s = '  File "%s", line %d' % (filename, lineno)
         else:
@@ -172,10 +171,8 @@ class TextExceptionFormatter(object):
     def formatException(self, etype, value, tb):
         # The next line provides a way to detect recursion.
         __exception_formatter__ = 1
-        result = [self.getPrefix() + '\n']
-        limit = self.getLimit()
-        n = 0
-        while tb is not None and (limit is None or n < limit):
+        result = []
+        while tb is not None:
             if tb.tb_frame.f_locals.get('__exception_formatter__'):
                 # Stop recursion.
                 result.append('(Recursive formatException() stopped, '
@@ -185,7 +182,14 @@ class TextExceptionFormatter(object):
             line = self.formatLine(tb=tb)
             result.append(line + '\n')
             tb = tb.tb_next
-            n = n + 1
+        template = (
+            '...\n'
+            '%(omitted)d entries omitted, because limit is %(limit)d.\n'
+            'Set sys.tracebacklimit or %(class)s.limit to a higher'
+            ' value to see omitted entries\n'
+            '...')
+        self._obeyLimit(result, template)
+        result = [self.getPrefix() + '\n'] + result
         exc_line = self.formatExceptionOnly(etype, value)
         result.append(self.formatLastLine(exc_line))
         return result
@@ -200,15 +204,28 @@ class TextExceptionFormatter(object):
         # The next line provides a way to detect recursion.
         __exception_formatter__ = 1
         result = []
-        limit = self.getLimit()
-        n = 0
-        while f is not None and (limit is None or n < limit):
+        while f is not None:
             line = self.formatLine(f=f)
             result.append(line + '\n')
             f = f.f_back
-            n = n + 1
+
+        self._obeyLimit(
+            result,
+            '...%(omitted)d entries omitted, because limit is %(limit)d...\n')
         result.reverse()
         return result
+
+    def _obeyLimit(self, result, template):
+        limit = self.getLimit()
+        if limit is not None and len(result) > limit:
+            # cut out the middle part of the TB
+            tocut = len(result) - limit
+            middle = len(result) / 2
+            lower = middle - tocut / 2
+            msg = (template % {'omitted': tocut,
+                               'limit': limit,
+                               'class': self.__class__.__name__})
+            result[lower:lower + tocut] = [msg]
 
 
 class HTMLExceptionFormatter(TextExceptionFormatter):
