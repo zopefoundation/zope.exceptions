@@ -291,22 +291,27 @@ class TextExceptionFormatterTests(unittest.TestCase):
 
     def test_formatException_deep_tb_stack_with_limit(self):
         import traceback
-        fmt = self._makeOne(limit=1)
+        fmt = self._makeOne(limit=4)
         err = ValueError('testing')
-        tb0 = DummyTB()
-        tb0.tb_lineno = 27
-        tb0.tb_frame = DummyFrame()
-        tb = DummyTB()
-        tb.tb_frame = DummyFrame()
-        tb.tb_next = tb0
+        tb = self._makeTBs(10)
         lines = fmt.formatException(ValueError, err, tb)
-        self.assertEqual(len(lines), 3)
-        self.assertEqual(lines[0], 'Traceback (most recent call last):\n')
-        self.assertEqual(lines[1], '  Module dummy/filename.py, line 14, '
-                                   'in dummy_function\n')
-        self.assertEqual(lines[2],
-                         ''.join(
-                            traceback.format_exception_only(ValueError, err)))
+
+        self.assertEqual(len(lines), 7)
+
+        expected = [
+            'Traceback (most recent call last):\n',
+            '  Module dummy/filename.py, line 4345, in dummy_function\n',
+            '  Module dummy/filename.py, line 2287, in dummy_function\n',
+            ('...\n'
+             '6 entries omitted, because limit is 4.\n'
+             'Set sys.tracebacklimit or TextExceptionFormatter.limit to'
+             ' a higher value to see omitted entries\n'
+             '...'),
+            '  Module dummy/filename.py, line 26, in dummy_function\n',
+            '  Module dummy/filename.py, line 14, in dummy_function\n',
+            ''.join(traceback.format_exception_only(ValueError, err))
+            ]
+        self.assertEqual(lines, expected)
 
     def test_formatException_recursion_in_tb_stack(self):
         import traceback
@@ -335,13 +340,25 @@ class TextExceptionFormatterTests(unittest.TestCase):
 
     def test_extractStack_wo_frame(self):
         import sys
-        fmt = self._makeOne(limit=1)
+        fmt = self._makeOne()
         f = sys._getframe(); lineno = f.f_lineno
         lines = fmt.extractStack()
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0], '  Module '
+        # rather don't assert this here
+        # self.assertEqual(len(lines), 10)
+        self.assertEqual(lines[-1], '  Module '
                          'zope.exceptions.tests.test_exceptionformatter, '
                          'line %d, in test_extractStack_wo_frame\n'
+                         '    lines = fmt.extractStack()\n' % (lineno + 1))
+
+    def test_extractStack_wo_frame_w_limit(self):
+        import sys
+        fmt = self._makeOne(limit=2)
+        f = sys._getframe(); lineno = f.f_lineno
+        lines = fmt.extractStack()
+        self.assertEqual(len(lines), 3)
+        self.assertEqual(lines[-1], '  Module '
+                         'zope.exceptions.tests.test_exceptionformatter, '
+                         'line %d, in test_extractStack_wo_frame_w_limit\n'
                          '    lines = fmt.extractStack()\n' % (lineno + 1))
 
     def test_extractStack_w_single_frame(self):
@@ -353,24 +370,73 @@ class TextExceptionFormatterTests(unittest.TestCase):
                                    'in dummy_function\n')
 
     def test_extractStack_w_multiple_frames_and_limit(self):
-        fmt = self._makeOne(limit=1)
-        f0 = DummyFrame()
-        f0.f_lineno = 213
-        f = DummyFrame()
-        f.f_back = f0
+        fmt = self._makeOne(limit=2)
+        f = self._makeFrames(10)
         lines = fmt.extractStack(f)
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0], '  Module dummy/filename.py, line 137, '
-                                   'in dummy_function\n')
+
+        self.assertEqual(len(lines), 3)
+
+        expected = [
+            '  Module dummy/filename.py, line 17, in dummy_function\n',
+            '...8 entries omitted, because limit is 2...\n',
+            '  Module dummy/filename.py, line 1126, in dummy_function\n',
+            ]
+
+        self.assertEqual(expected, lines)
+
+    def test_extractStack_w_recursive_frames(self):
+        fmt = self._makeOne()
+        f = self._makeFrames(3)
+        f.f_back.f_locals['__exception_formatter__'] = 1
+        lines = fmt.extractStack(f)
+        self.assertEqual(len(lines), 4)
+
+        expected = [
+            '  File "dummy/filename.py", line 17, in dummy_function\n',
+            '  File "dummy/filename.py", line 27, in dummy_function\n',
+            '(Recursive extractStack() stopped, trying traceback.format_stack)\n',
+            '  Module dummy/filename.py, line 43, in dummy_function\n',
+            ]
+
+        self.assertEqual(expected, lines)
 
     def test_extractStack_w_recursive_frames_and_limit(self):
-        fmt = self._makeOne(limit=1)
-        f = DummyFrame()
-        f.f_back = f
+        fmt = self._makeOne(limit=2)
+        f = self._makeFrames(3)
+        f.f_back.f_locals['__exception_formatter__'] = 1
         lines = fmt.extractStack(f)
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0], '  Module dummy/filename.py, line 137, '
-                                   'in dummy_function\n')
+        self.assertEqual(len(lines), 3)
+
+        expected = [
+            '  File "dummy/filename.py", line 17, in dummy_function\n',
+            '...2 entries omitted, because limit is 2...\n',
+            '  Module dummy/filename.py, line 43, in dummy_function\n',
+            ]
+
+        self.assertEqual(expected, lines)
+
+    def _makeTBs(self, count):
+        prev = None
+        for i in range(count):
+            tb = DummyTB()
+            tb.tb_lineno = 14
+            tb.tb_frame = DummyFrame()
+            if prev is not None:
+                tb.tb_lineno = int(prev.tb_lineno * 1.9)
+                tb.tb_next = prev
+            prev = tb
+        return tb
+
+    def _makeFrames(self, count):
+        prev = None
+        for i in range(count):
+            f = DummyFrame()
+            f.f_lineno = 17
+            if prev is not None:
+                f.f_lineno = int(prev.f_lineno * 1.6)
+                f.f_back = prev
+            prev = f
+        return f
 
 
 class HTMLExceptionFormatterTests(unittest.TestCase):

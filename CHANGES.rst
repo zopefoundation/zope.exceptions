@@ -4,7 +4,12 @@
 4.0.8 (unreleased)
 ------------------
 
-- TBD
+- Fixes around ``TextExceptionFormatter`` ``limit``: ``formatException``
+  and ``extractStack`` was cutting the traceback at the bottom,
+  at the most interesting point. Now it will cut from the middle.
+  Some text about the missing entries will be inserted.
+
+- Maybe fix for ``extractStack``, it did not detect recursions in the frames.
 
 4.0.7 (2014-03-19)
 ------------------
