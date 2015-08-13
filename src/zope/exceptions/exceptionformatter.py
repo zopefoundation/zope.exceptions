@@ -184,8 +184,8 @@ class TextExceptionFormatter(object):
             tb = tb.tb_next
         template = (
             '...\n'
-            '%(omitted)d entries omitted, because limit is %(limit)d.\n'
-            'Set sys.tracebacklimit or %(class)s.limit to a higher'
+            '{omitted} entries omitted, because limit is {limit}.\n'
+            'Set sys.tracebacklimit or {klass}.limit to a higher'
             ' value to see omitted entries\n'
             '...')
         self._obeyLimit(result, template)
@@ -219,7 +219,7 @@ class TextExceptionFormatter(object):
 
         self._obeyLimit(
             result,
-            '...%(omitted)d entries omitted, because limit is %(limit)d...\n')
+            '...{omitted} entries omitted, because limit is {limit}...\n')
         result.reverse()
         return result
 
@@ -230,9 +230,8 @@ class TextExceptionFormatter(object):
             tocut = len(result) - limit
             middle = len(result) // 2
             lower = middle - tocut // 2
-            msg = (template % {'omitted': tocut,
-                               'limit': limit,
-                               'class': self.__class__.__name__})
+            msg = template.format(
+                omitted=tocut, limit=limit, klass=self.__class__.__name__)
             result[lower:lower + tocut] = [msg]
 
 
