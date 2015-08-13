@@ -1,7 +1,7 @@
 ``zope.exceptions`` Changelog
 =============================
 
-4.0.8 (unreleased)
+4.0.8 (2015-08-13)
 ------------------
 
 - Fixes around ``TextExceptionFormatter`` ``limit``: ``formatException``
