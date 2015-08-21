@@ -4,7 +4,8 @@
 4.0.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Make ``exceptionformatter.extract_stack`` signature comply with
+  ``traceback.extract_stack``
 
 
 4.0.8 (2015-08-13)
