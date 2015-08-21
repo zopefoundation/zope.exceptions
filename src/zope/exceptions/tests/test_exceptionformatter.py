@@ -794,6 +794,14 @@ class Test_extract_stack(unittest.TestCase):
         # The warning
         self.assertTrue(s.find("Repent, for the end is nigh") >= 0, s)
 
+    def test_noinput(self):
+        try:
+            raise ExceptionForTesting
+        except ExceptionForTesting:
+            from zope.exceptions.exceptionformatter import extract_stack
+            s = ''.join(extract_stack())
+            self.assertTrue(s.find('test_noinput') >= 0)
+
 
 class ExceptionForTesting (Exception):
     pass

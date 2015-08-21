@@ -297,11 +297,12 @@ def print_exception(t, v, tb, limit=None, file=None, as_html=False,
     for line in lines:
         file.write(line)
 
-def extract_stack(f, limit=None, as_html=False,
+
+def extract_stack(f=None, limit=None, as_html=False,
                   with_filenames=True):
     """Format a stack trace and the exception information.
 
-    Similar to 'traceback.format_exception', but adds supplemental
+    Similar to 'traceback.extract_stack', but adds supplemental
     information to the traceback and accepts two options, 'as_html'
     and 'with_filenames'.
     """
