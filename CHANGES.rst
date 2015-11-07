@@ -7,6 +7,7 @@
 - Make ``exceptionformatter.extract_stack`` signature comply with
   ``traceback.extract_stack``
 
+- Claim support for Python 3.5.
 
 4.0.8 (2015-08-13)
 ------------------
