@@ -1,7 +1,7 @@
 ``zope.exceptions``
 ===================
 
-.. image:: https://pypip.in/version/zope.exceptions/badge.svg?style=flat
+.. image:: https://img.shields.io/pypi/v/zope.exceptions.svg
     :target: https://pypi.python.org/pypi/zope.exceptions/
     :alt: Latest Version
 
