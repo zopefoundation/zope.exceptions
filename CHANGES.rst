@@ -1,13 +1,15 @@
 ``zope.exceptions`` Changelog
 =============================
 
-4.0.9 (unreleased)
+4.1.0 (unreleased)
 ------------------
+
+- Drop support for Python 2.6 and 3.2.
 
 - Make ``exceptionformatter.extract_stack`` signature comply with
   ``traceback.extract_stack``
 
-- Claim support for Python 3.5.
+- Add support for Python 3.5.
 
 4.0.8 (2015-08-13)
 ------------------
