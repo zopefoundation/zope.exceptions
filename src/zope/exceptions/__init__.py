@@ -28,11 +28,11 @@ from zope.exceptions.exceptionformatter import extract_stack
 # avoid dependency on zope.security:
 try:
     import zope.security
-except ImportError as v: #pragma NO COVER
+except ImportError as v: #pragma: no cover
     # "ImportError: No module named security"
     if 'security' not in str(v):
         raise
-else: #pragma NO COVER
+else: #pragma: no cover
     from zope.security.interfaces import IUnauthorized
     from zope.security.interfaces import Unauthorized
     from zope.security.interfaces import IForbidden

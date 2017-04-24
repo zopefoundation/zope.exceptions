@@ -87,7 +87,7 @@ class TextExceptionFormatter(object):
                 extra = getInfo()
                 if extra:
                     result.append(self.formatSupplementInfo(extra))
-            except: #pragma NO COVER
+            except: #pragma: no cover
                 if DEBUG_EXCEPTION_FORMATTER:
                     traceback.print_exc()
                 # else just swallow the exception.
@@ -145,7 +145,7 @@ class TextExceptionFormatter(object):
             try:
                 supp = factory(*args)
                 result.extend(self.formatSupplement(supp, tb))
-            except: #pragma NO COVER
+            except: #pragma: no cover
                 if DEBUG_EXCEPTION_FORMATTER:
                     traceback.print_exc()
                 # else just swallow the exception.
@@ -154,7 +154,7 @@ class TextExceptionFormatter(object):
             tbi = locals.get('__traceback_info__', None)
             if tbi is not None:
                 result.append(self.formatTracebackInfo(tbi))
-        except: #pragma NO COVER
+        except: #pragma: no cover
             if DEBUG_EXCEPTION_FORMATTER:
                 traceback.print_exc()
             # else just swallow the exception.
@@ -291,7 +291,7 @@ def print_exception(t, v, tb, limit=None, file=None, as_html=False,
     information to the traceback and accepts two options, 'as_html'
     and 'with_filenames'.
     """
-    if file is None: #pragma NO COVER
+    if file is None: #pragma: no cover
         file = sys.stderr
     lines = format_exception(t, v, tb, limit, as_html, with_filenames)
     for line in lines:
