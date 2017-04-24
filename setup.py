@@ -40,6 +40,10 @@ def alltests():
     suites = list(zope.testrunner.find.find_suites(options))
     return unittest.TestSuite(suites)
 
+tests_require = [
+    'zope.testrunner',
+]
+
 setup(name='zope.exceptions',
       version='4.1.1.dev0',
       author='Zope Foundation and Contributors',
@@ -47,8 +51,8 @@ setup(name='zope.exceptions',
       description='Zope Exceptions',
       long_description=(read('README.rst') + '\n\n' +
                         read('CHANGES.rst')),
-      keywords = 'zope exceptions',
-      classifiers = [
+      keywords='zope exceptions',
+      classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Environment :: Web Environment',
           'Intended Audience :: Developers',
@@ -60,28 +64,32 @@ setup(name='zope.exceptions',
           'Programming Language :: Python :: 3.3',
           'Programming Language :: Python :: 3.4',
           'Programming Language :: Python :: 3.5',
+          'Programming Language :: Python :: 3.6',
           "Programming Language :: Python :: Implementation :: CPython",
           "Programming Language :: Python :: Implementation :: PyPy",
           'Natural Language :: English',
           'Operating System :: OS Independent',
           'Topic :: Internet :: WWW/HTTP',
-          'Framework :: Zope3'],
+          'Framework :: Zope3',
+      ],
       url='http://cheeseshop.python.org/pypi/zope.exceptions',
       license='ZPL 2.1',
       packages=find_packages('src'),
-      package_dir = {'': 'src'},
+      package_dir={'': 'src'},
       namespace_packages=['zope'],
-      install_requires=['setuptools',
-                        'zope.interface',
-                       ],
-      tests_require = [
+      install_requires=[
+          'setuptools',
+          'zope.interface',
+      ],
+      tests_require=[
           'zope.testrunner',
-          ],
-      test_suite = '__main__.alltests',
-      include_package_data = True,
-      zip_safe = False,
-      extras_require = {
-        'docs': ['Sphinx', 'repoze.sphinx.autointerface'],
-        'testing': ['nose', 'coverage'],
+      ],
+      test_suite='__main__.alltests',
+      include_package_data=True,
+      zip_safe=False,
+      extras_require={
+          'docs': ['Sphinx', 'repoze.sphinx.autointerface'],
+          'testing': ['nose', 'coverage'],
+          'test': tests_require,
       },
 )
