@@ -844,8 +844,8 @@ class _Monkey(object):
     # context-manager for replacing module names in the scope of a test.
     def __init__(self, module, **kw):
         self.module = module
-        self.to_restore = dict([(key, getattr(module, key, self))
-                                    for key in kw])
+        self.to_restore = {key: getattr(module, key, self)
+                           for key in kw}
         for key, value in kw.items():
             setattr(module, key, value)
 
@@ -854,7 +854,7 @@ class _Monkey(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         for key, value in self.to_restore.items():
-            if value is not self:
+            if value is not self: # pragma: no cover
                 setattr(self.module, key, value)
             else:
                 delattr(self.module, key)
