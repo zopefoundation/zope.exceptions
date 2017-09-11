@@ -28,7 +28,6 @@ class FormatterTests(unittest.TestCase):
     def test_simple_exception(self):
         import traceback
         tb = DummyTB()
-        tb.tb_frame = DummyFrame()
         exc = ValueError('testing')
         fmt = self._makeOne()
         result = fmt.formatException((ValueError, exc, tb))
@@ -38,14 +37,40 @@ class FormatterTests(unittest.TestCase):
         self.assertEqual(lines[1], '  File "dummy/filename.py", line 14, '
                                    'in dummy_function')
         self.assertEqual(lines[2],
-                        traceback.format_exception_only(
-                                        ValueError, exc)[0][:-1]) #trailing \n
+                         traceback.format_exception_only(
+                             ValueError, exc)[0][:-1]) #trailing \n
+
+    def test_unicode_traceback_info(self):
+        import traceback
+        __traceback_info__ = u"Have a Snowman: \u2603"
+        tb = DummyTB()
+        tb.tb_frame.f_locals['__traceback_info__'] = __traceback_info__
+        exc = ValueError('testing')
+        fmt = self._makeOne()
+        result = fmt.formatException((ValueError, exc, tb))
+        self.assertIsInstance(result, str)
+        lines = result.splitlines()
+        self.assertEqual(len(lines), 4)
+        self.assertEqual(lines[0], 'Traceback (most recent call last):')
+        self.assertEqual(lines[1], '  File "dummy/filename.py", line 14, '
+                                   'in dummy_function')
+        expected = '   - __traceback_info__: Have a Snowman: '
+        # utf-8 encoded on Python 2, unicode on Python 3
+        expected += '\xe2\x98\x83' if bytes is str else u'\u2603'
+
+        self.assertEqual(lines[2],
+                         expected)
+        self.assertEqual(lines[3],
+                         traceback.format_exception_only(
+                             ValueError, exc)[0][:-1]) #trailing \n
 
 
 class DummyTB(object):
     tb_lineno = 14
     tb_next = None
 
+    def __init__(self):
+        self.tb_frame = DummyFrame()
 
 class DummyFrame(object):
     f_lineno = 137

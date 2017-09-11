@@ -46,7 +46,12 @@ class TextExceptionFormatter(object):
         return limit
 
     def formatSupplementLine(self, line):
-        return '   - %s' % line
+        result = '   - %s' % line
+        if not isinstance(result, str):
+            # Must be an Python 2, and must be a unicode `line`
+            # and we upconverted the result to a unicode
+            result = result.encode('utf-8')
+        return result
 
     def formatSourceURL(self, url):
         return [self.formatSupplementLine(url)]
@@ -110,13 +115,13 @@ class TextExceptionFormatter(object):
         co = f.f_code
         filename = co.co_filename
         name = co.co_name
-        locals = f.f_locals    # XXX shadowing normal builtins deliberately?
-        globals = f.f_globals  # XXX shadowing normal builtins deliberately?
+        f_locals = f.f_locals
+        f_globals = f.f_globals
 
         if self.with_filenames:
             s = '  File "%s", line %d' % (filename, lineno)
         else:
-            modname = globals.get('__name__', filename)
+            modname = f_globals.get('__name__', filename)
             s = '  Module %s, line %d' % (modname, lineno)
 
         s = s + ', in %s' % name
@@ -130,13 +135,13 @@ class TextExceptionFormatter(object):
             result.append("    " + self.escape(line.strip()))
 
         # Output a traceback supplement, if any.
-        if '__traceback_supplement__' in locals:
+        if '__traceback_supplement__' in f_locals:
             # Use the supplement defined in the function.
-            tbs = locals['__traceback_supplement__']
-        elif '__traceback_supplement__' in globals:
+            tbs = f_locals['__traceback_supplement__']
+        elif '__traceback_supplement__' in f_globals:
             # Use the supplement defined in the module.
             # This is used by Scripts (Python).
-            tbs = globals['__traceback_supplement__']
+            tbs = f_globals['__traceback_supplement__']
         else:
             tbs = None
         if tbs is not None:
@@ -151,7 +156,7 @@ class TextExceptionFormatter(object):
                 # else just swallow the exception.
 
         try:
-            tbi = locals.get('__traceback_info__', None)
+            tbi = f_locals.get('__traceback_info__', None)
             if tbi is not None:
                 result.append(self.formatTracebackInfo(tbi))
         except: #pragma: no cover
@@ -240,13 +245,23 @@ class HTMLExceptionFormatter(TextExceptionFormatter):
     line_sep = '<br />\r\n'
 
     def escape(self, s):
+        if not isinstance(s, str):
+            try:
+                s = str(s)
+            except UnicodeError:
+                if hasattr(s, 'encode'):
+                    # We probably got a unicode string on
+                    # Python 2.
+                    s = s.encode('utf-8')
+                else: # pragma: no cover
+                    raise
         return escape(s, quote=False)
 
     def getPrefix(self):
         return '<p>Traceback (most recent call last):</p>\r\n<ul>'
 
     def formatSupplementLine(self, line):
-        return '<b>%s</b>' % self.escape(str(line))
+        return '<b>%s</b>' % self.escape(line)
 
     def formatSupplementInfo(self, info):
         info = self.escape(info)
@@ -255,7 +270,7 @@ class HTMLExceptionFormatter(TextExceptionFormatter):
         return info
 
     def formatTracebackInfo(self, tbi):
-        s = self.escape(str(tbi))
+        s = self.escape(tbi)
         s = s.replace('\n', self.line_sep)
         return '__traceback_info__: %s' % (s, )
 
@@ -275,6 +290,9 @@ def format_exception(t, v, tb, limit=None, as_html=False,
     Similar to 'traceback.format_exception', but adds supplemental
     information to the traceback and accepts two options, 'as_html'
     and 'with_filenames'.
+
+    The result is a list of native strings; on Python 2 they are UTF-8
+    encoded if need be.
     """
     if as_html:
         fmt = HTMLExceptionFormatter(limit, with_filenames)
@@ -291,7 +309,7 @@ def print_exception(t, v, tb, limit=None, file=None, as_html=False,
     information to the traceback and accepts two options, 'as_html'
     and 'with_filenames'.
     """
-    if file is None: #pragma: no cover
+    if file is None: # pragma: no cover
         file = sys.stderr
     lines = format_exception(t, v, tb, limit, as_html, with_filenames)
     for line in lines:

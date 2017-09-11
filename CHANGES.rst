@@ -7,6 +7,12 @@
 
 - Add support for Python 3.6.
 
+- Drop support for Python 3.3.
+
+- Fix handling of unicode supplemental traceback information on
+  Python 2. Now such values are always encoded to UTF-8; previously
+  the results were undefined and depended on system encodings and the
+  values themselves. See `issue 1 <https://github.com/zopefoundation/zope.exceptions/issues/1>`_.
 
 4.1.0 (2017-04-12)
 ==================
@@ -76,7 +82,7 @@
 4.0.1 (2012-08-20)
 ==================
 
-- Fixed optional dependency code for `zope.security` to work under Python 3.3.
+- Fixed optional dependency code for `'zope.security`` to work under Python 3.3.
 
 
 4.0.0.1 (2012-05-16)
