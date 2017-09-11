@@ -15,13 +15,11 @@
 """
 
 import logging
-try:
-    from StringIO import StringIO
-except ImportError: #pragma: no cover Python3
-    from io import StringIO
+import io
 
 from zope.exceptions.exceptionformatter import print_exception
 
+Buffer = io.StringIO if bytes is not str else io.BytesIO
 
 class Formatter(logging.Formatter):
 
@@ -30,7 +28,7 @@ class Formatter(logging.Formatter):
 
         Uses zope.exceptions.exceptionformatter to generate the traceback.
         """
-        sio = StringIO()
+        sio = Buffer()
         print_exception(ei[0], ei[1], ei[2], file=sio, with_filenames=True)
         s = sio.getvalue()
         if s.endswith("\n"):

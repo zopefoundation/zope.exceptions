@@ -14,7 +14,6 @@
 """ExceptionFormatter tests.
 """
 import unittest
-import doctest
 import sys
 
 
@@ -53,7 +52,6 @@ class TextExceptionFormatterTests(unittest.TestCase):
         self.assertEqual(fmt.getLimit(), 200)
 
     def test_getLimit_sys_has_limit(self):
-        import sys
         fmt = self._makeOne()
         with _Monkey(sys, tracebacklimit=15):
             self.assertEqual(fmt.getLimit(), 15)
@@ -152,6 +150,17 @@ class TextExceptionFormatterTests(unittest.TestCase):
         self.assertEqual(fmt.formatTracebackInfo('XYZZY'),
                          '   - __traceback_info__: XYZZY')
 
+    def test_formatTracebackInfo_unicode(self):
+        __traceback_info__ = u"Have a Snowman: \u2603"
+        fmt = self._makeOne()
+
+        result = fmt.formatTracebackInfo(__traceback_info__)
+        expected = '   - __traceback_info__: Have a Snowman: '
+        # utf-8 encoded on Python 2, unicode on Python 3
+        expected += '\xe2\x98\x83' if bytes is str else u'\u2603'
+        self.assertIsInstance(result, str)
+        self.assertEqual(result, expected)
+
     def test_formatLine_no_tb_no_f(self):
         fmt = self._makeOne()
         self.assertRaises(ValueError, fmt.formatLine, None, None)
@@ -168,24 +177,26 @@ class TextExceptionFormatterTests(unittest.TestCase):
         tb.tb_frame = f = DummyFrame()
         lines = fmt.formatLine(tb).splitlines()
         self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0],
-                         '  File "%s", line %d, in %s'
-                          % (f.f_code.co_filename,
-                             tb.tb_lineno,
-                             f.f_code.co_name,
-                            ))
+        self.assertEqual(
+            lines[0],
+            '  File "%s", line %d, in %s'
+            % (f.f_code.co_filename,
+               tb.tb_lineno,
+               f.f_code.co_name,)
+        )
 
     def test_formatLine_w_f_bogus_linecache_w_filenames(self):
         fmt = self._makeOne(with_filenames=True)
         f = DummyFrame()
         lines = fmt.formatLine(f=f).splitlines()
         self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0],
-                         '  File "%s", line %d, in %s'
-                          % (f.f_code.co_filename,
-                             f.f_lineno,
-                             f.f_code.co_name,
-                            ))
+        self.assertEqual(
+            lines[0],
+            '  File "%s", line %d, in %s'
+            % (f.f_code.co_filename,
+               f.f_lineno,
+               f.f_code.co_name,)
+        )
 
     def test_formatLine_w_tb_bogus_linecache_wo_filenames(self):
         fmt = self._makeOne(with_filenames=False)
@@ -194,25 +205,27 @@ class TextExceptionFormatterTests(unittest.TestCase):
         f.f_globals['__name__'] = 'dummy.filename'
         lines = fmt.formatLine(tb).splitlines()
         self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0],
-                         '  Module dummy.filename, line %d, in %s'
-                          % (tb.tb_lineno,
-                             f.f_code.co_name,
-                            ))
+        self.assertEqual(
+            lines[0],
+            '  Module dummy.filename, line %d, in %s'
+            % (tb.tb_lineno,
+               f.f_code.co_name,)
+        )
 
     def test_formatLine_w_f_real_linecache_w_filenames(self):
-        import sys
         fmt = self._makeOne(with_filenames=True)
-        f = sys._getframe(); lineno = f.f_lineno
+        f = sys._getframe()
+        lineno = f.f_lineno
         result = fmt.formatLine(f=f)
         lines = result.splitlines()
         self.assertEqual(len(lines), 2)
-        self.assertEqual(lines[0],
-                         '  File "%s", line %d, in %s'
-                          % (f.f_code.co_filename,
-                             lineno + 1,
-                             f.f_code.co_name,
-                            ))
+        self.assertEqual(
+            lines[0],
+            '  File "%s", line %d, in %s'
+            % (f.f_code.co_filename,
+               lineno + 1,
+               f.f_code.co_name,)
+        )
         self.assertEqual(lines[1],
                          '    result = fmt.formatLine(f=f)')
 
@@ -257,7 +270,7 @@ class TextExceptionFormatterTests(unittest.TestCase):
         err = ValueError('testing')
         self.assertEqual(fmt.formatExceptionOnly(ValueError, err),
                          ''.join(
-                            traceback.format_exception_only(ValueError, err)))
+                             traceback.format_exception_only(ValueError, err)))
 
     def test_formatLastLine(self):
         fmt = self._makeOne()
@@ -272,7 +285,7 @@ class TextExceptionFormatterTests(unittest.TestCase):
         self.assertEqual(lines[0], 'Traceback (most recent call last):\n')
         self.assertEqual(lines[1],
                          ''.join(
-                            traceback.format_exception_only(ValueError, err)))
+                             traceback.format_exception_only(ValueError, err)))
 
     def test_formatException_non_empty_tb_stack(self):
         import traceback
@@ -287,7 +300,7 @@ class TextExceptionFormatterTests(unittest.TestCase):
                                    'in dummy_function\n')
         self.assertEqual(lines[2],
                          ''.join(
-                            traceback.format_exception_only(ValueError, err)))
+                             traceback.format_exception_only(ValueError, err)))
 
     def test_formatException_deep_tb_stack_with_limit(self):
         import traceback
@@ -336,12 +349,12 @@ class TextExceptionFormatterTests(unittest.TestCase):
                                    'in dummy_function\n')
         self.assertEqual(lines[4],
                          ''.join(
-                            traceback.format_exception_only(ValueError, err)))
+                             traceback.format_exception_only(ValueError, err)))
 
     def test_extractStack_wo_frame(self):
-        import sys
         fmt = self._makeOne()
-        f = sys._getframe(); lineno = f.f_lineno
+        f = sys._getframe()
+        lineno = f.f_lineno
         lines = fmt.extractStack()
         # rather don't assert this here
         # self.assertEqual(len(lines), 10)
@@ -351,9 +364,9 @@ class TextExceptionFormatterTests(unittest.TestCase):
                          '    lines = fmt.extractStack()\n' % (lineno + 1))
 
     def test_extractStack_wo_frame_w_limit(self):
-        import sys
         fmt = self._makeOne(limit=2)
-        f = sys._getframe(); lineno = f.f_lineno
+        f = sys._getframe()
+        lineno = f.f_lineno
         lines = fmt.extractStack()
         self.assertEqual(len(lines), 3)
         self.assertEqual(lines[-1], '  Module '
@@ -417,7 +430,7 @@ class TextExceptionFormatterTests(unittest.TestCase):
 
     def _makeTBs(self, count):
         prev = None
-        for i in range(count):
+        for _i in range(count):
             tb = DummyTB()
             tb.tb_lineno = 14
             tb.tb_frame = DummyFrame()
@@ -429,7 +442,7 @@ class TextExceptionFormatterTests(unittest.TestCase):
 
     def _makeFrames(self, count):
         prev = None
-        for i in range(count):
+        for _i in range(count):
             f = DummyFrame()
             f.f_lineno = 17
             if prev is not None:
@@ -467,7 +480,7 @@ class HTMLExceptionFormatterTests(unittest.TestCase):
     def test_escape_w_markup(self):
         fmt = self._makeOne()
         self.assertEqual(fmt.escape('<span>XXX & YYY<span>'),
-                                    '&lt;span&gt;XXX &amp; YYY&lt;span&gt;')
+                         '&lt;span&gt;XXX &amp; YYY&lt;span&gt;')
 
     def test_getPrefix(self):
         fmt = self._makeOne()
@@ -506,12 +519,13 @@ class HTMLExceptionFormatterTests(unittest.TestCase):
         tb = DummyTB()
         tb.tb_frame = f = DummyFrame()
         result = fmt.formatLine(tb)
-        self.assertEqual(result,
-                         '<li>  File "%s", line %d, in %s</li>'
-                          % (f.f_code.co_filename,
-                             tb.tb_lineno,
-                             f.f_code.co_name,
-                            ))
+        self.assertEqual(
+            result,
+            '<li>  File "%s", line %d, in %s</li>'
+            % (f.f_code.co_filename,
+               tb.tb_lineno,
+               f.f_code.co_name,)
+        )
 
     def test_formatLastLine(self):
         fmt = self._makeOne()
@@ -521,7 +535,6 @@ class HTMLExceptionFormatterTests(unittest.TestCase):
 class Test_format_exception(unittest.TestCase):
 
     def _callFUT(self, as_html=False):
-        import sys
         from zope.exceptions.exceptionformatter import format_exception
         t, v, b = sys.exc_info()
         try:
@@ -633,23 +646,33 @@ class Test_format_exception(unittest.TestCase):
             pass
         try:
             raise TypeError(C())
-        except:
+        except TypeError:
             s = self._callFUT(True)
-        self.assertTrue(s.find('&lt;') >= 0, s)
-        self.assertTrue(s.find('&gt;') >= 0, s)
+        self.assertIn('&lt;', s)
+        self.assertIn('&gt;', s)
 
     def test_multiline_exception(self):
         try:
             exec('syntax error\n')
-        except Exception:
+        except SyntaxError:
             s = self._callFUT(False)
         lines = s.splitlines()[-3:]
         self.assertEqual(lines[0], '    syntax error')
         self.assertTrue(lines[1].endswith('    ^')) #PyPy has a shorter prefix
         self.assertEqual(lines[2], 'SyntaxError: invalid syntax')
 
+    def test_traceback_info_non_ascii(self):
+        __traceback_info__ = u"Have a Snowman: \u2603"
+        try:
+            raise TypeError()
+        except TypeError:
+            s = self._callFUT(True)
+
+        self.assertIsInstance(s, str)
+        self.assertIn('Have a Snowman', s)
+
+
     def test_recursion_failure(self):
-        import sys
         from zope.exceptions.exceptionformatter import TextExceptionFormatter
 
         class FormatterException(Exception):
@@ -676,16 +699,38 @@ class Test_format_exception(unittest.TestCase):
         self.assertTrue('FormatterException: Formatter failed'
                         in s.splitlines()[-1])
 
+    def test_format_exception_as_html(self):
+        # Test for format_exception (as_html=True)
+        from zope.exceptions.exceptionformatter import format_exception
+        from textwrap import dedent
+        import re
+        try:
+            exec('import')
+        except SyntaxError:
+            result = ''.join(format_exception(*sys.exc_info(), as_html=True))
+        expected = dedent("""\
+            <p>Traceback (most recent call last):</p>
+            <ul>
+            <li>  Module zope.exceptions.tests.test_exceptionformatter, line ABC, in test_format_exception_as_html<br />
+                exec('import')</li>
+            </ul><p>  File "&lt;string&gt;", line 1<br />
+                import<br />
+                     ^<br />
+            SyntaxError: invalid syntax<br />
+            </p>""")
+        # HTML formatter uses Windows line endings for some reason.
+        result = result.replace('\r\n', '\n')
+        result = re.sub(r'line \d\d\d,', 'line ABC,', result)
+        self.maxDiff = None
+        self.assertEqual(expected, result)
+
 
 class Test_print_exception(unittest.TestCase):
 
     def _callFUT(self, as_html=False):
-        try:
-            from StringIO import StringIO
-        except ImportError:
-            from io import StringIO
-        buf = StringIO()
-        import sys
+        import io
+        buf = io.StringIO() if bytes is not str else io.BytesIO()
+
         from zope.exceptions.exceptionformatter import print_exception
         t, v, b = sys.exc_info()
         try:
@@ -718,7 +763,6 @@ class Test_print_exception(unittest.TestCase):
 class Test_extract_stack(unittest.TestCase):
 
     def _callFUT(self, as_html=False):
-        import sys
         from zope.exceptions.exceptionformatter import extract_stack
         f = sys.exc_info()[2].tb_frame
         try:
@@ -752,7 +796,7 @@ class Test_extract_stack(unittest.TestCase):
 
     def test_traceback_info_html(self):
         try:
-            __traceback_info__ = "Adam & Eve"
+            __traceback_info__ = u"Adam & Eve"
             raise ExceptionForTesting
         except ExceptionForTesting:
             s = self._callFUT(True)
@@ -761,7 +805,7 @@ class Test_extract_stack(unittest.TestCase):
     def test_traceback_supplement_text(self):
         try:
             __traceback_supplement__ = (TestingTracebackSupplement,
-                                        "You're one in a million")
+                                        u"You're one in a million")
             raise ExceptionForTesting
         except ExceptionForTesting:
             s = self._callFUT(False)
@@ -803,7 +847,7 @@ class Test_extract_stack(unittest.TestCase):
             self.assertTrue(s.find('test_noinput') >= 0)
 
 
-class ExceptionForTesting (Exception):
+class ExceptionForTesting(Exception):
     pass
 
 
@@ -860,30 +904,7 @@ class _Monkey(object):
                 delattr(self.module, key)
 
 
-def doctest_format_exception_as_html():
-    """Test for format_exception (as_html=True)
-
-        >>> from zope.exceptions.exceptionformatter import format_exception
-        >>> try:
-        ...     exec('import 2 + 2')
-        ... except:
-        ...     print(''.join(format_exception(*sys.exc_info(), as_html=True)))
-        <p>Traceback (most recent call last):</p>
-        <ul>
-        <li>  Module zope.exceptions.tests.test_exceptionformatter, line 2, in &lt;module&gt;<br />
-            exec('import 2 + 2')</li>
-        </ul><p>  File "&lt;string&gt;", line 1<br />
-            import 2 + 2<br />
-                   ^<br />
-        SyntaxError: invalid syntax<br />
-        </p>
-
-    """
 
 
 def test_suite():
-    return unittest.TestSuite([
-        unittest.defaultTestLoader.loadTestsFromName(__name__),
-        doctest.DocTestSuite(
-                optionflags=doctest.NORMALIZE_WHITESPACE),
-    ])
+    return unittest.defaultTestLoader.loadTestsFromName(__name__)
