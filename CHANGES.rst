@@ -1,14 +1,15 @@
-``zope.exceptions`` Changelog
-=============================
+===========================
+ zope.exceptions Changelog
+===========================
 
-4.1.1 (unreleased)
-------------------
+4.2.0 (unreleased)
+==================
 
 - Add support for Python 3.6.
 
 
 4.1.0 (2017-04-12)
-------------------
+==================
 
 - Drop support for Python 2.6 and 3.2.
 
@@ -18,7 +19,7 @@
 - Add support for Python 3.5.
 
 4.0.8 (2015-08-13)
-------------------
+==================
 
 - Fixes around ``TextExceptionFormatter`` ``limit``: ``formatException``
   and ``extractStack`` was cutting the traceback at the bottom,
@@ -28,7 +29,7 @@
 - Maybe fix for ``extractStack``, it did not detect recursions in the frames.
 
 4.0.7 (2014-03-19)
-------------------
+==================
 
 - Added explicit support for Python 3.4.
 
@@ -36,7 +37,7 @@
 
 
 4.0.6 (2013-02-28)
-------------------
+==================
 
 - Make sure that ``setup.py`` finds all tests. Now tox runs them all as well.
 
@@ -46,7 +47,7 @@
 
 
 4.0.5 (2012-12-31)
-------------------
+==================
 
 - Fleshed out PyPI Trove classifiers.
 
@@ -54,38 +55,38 @@
 
 
 4.0.4 (2012-12-13)
-------------------
+==================
 
 - Release with a fixed MANIFEST.in (without ``docs/``)
 
 
 4.0.3 (2012-12-10)
-------------------
+==================
 
 - Fixed format_exception(..., as_html=True) not to HTML-escape the '<br />'
   it adds to the exception value.
 
 
 4.0.2 (2012-11-21)
-------------------
+==================
 
 - Test Python 3.3 support under tox.
 
 
 4.0.1 (2012-08-20)
-------------------
+==================
 
 - Fixed optional dependency code for `zope.security` to work under Python 3.3.
 
 
 4.0.0.1 (2012-05-16)
---------------------
+====================
 
 - Fixed rendering of package docs on PyPI.
 
 
 4.0.0 (2012-05-16)
-------------------
+==================
 
 - Automated build of Sphinx HTML docs and running doctest snippets via tox.
 
@@ -109,19 +110,19 @@
 
 
 3.7.1 (2012-03-28)
-------------------
+==================
 
 - Fix: missed to reverse extractStack entries
 
 
 3.7.0 (2012-03-28)
-------------------
+==================
 
 - Added TextExceptionFormatter.extractStack and extract_stack
 
 
 3.6.2 (2012-03-28)
-------------------
+==================
 
 - Fallback to traceback.format_tb when the formatter is called recursively.
   i.e. Don't let errors in the formatter pass silently.
@@ -129,7 +130,7 @@
 - Fix deprecated unittest functions: ``assert_`` and ``assertEquals``.
 
 3.6.1 (2010-07-06)
-------------------
+==================
 
 - Fixed tests to work under Python 2.7.
 
@@ -137,7 +138,7 @@
 
 
 3.6.0 (2010-05-02)
-------------------
+==================
 
 - Added support to bootstrap on Jython.
 
@@ -148,19 +149,19 @@
 
 
 3.5.2 (2008-04-30)
-------------------
+==================
 
 - Updated CHANGES.txt.
 
 
 3.5.1 (2008-04-28)
-------------------
+==================
 
 - Reverted changes in 3.5.0.
 
 
 3.5.0
------
+=====
 
 - Added the capability for exceptions to be formatted line-by-line.
   Unfortunately, also introduced a bug cause each line of the exception to be
@@ -168,26 +169,26 @@
 
 
 3.4.0 (2007-10-02)
-------------------
+==================
 
 - Updated package meta-data.
 
 
 3.4.0b2 (2007-08-14)
---------------------
+====================
 
 - Removed superfluous dependency on ``zope.deprecation``.
 
 
 3.4.0b1 (2007-07-09)
---------------------
+====================
 
 - Corresponds to the version of the ``zope.exceptions`` package shipped as
   part of the Zope 3.4.0b1 release.
 
 
 3.2.0 (2006-01-05)
-------------------
+==================
 
 - Corresponds to the version of the ``zope.exceptions`` package shipped as part of
   the Zope 3.2.0 release.
@@ -199,7 +200,7 @@
 
 
 3.0.0 (2004-11-07)
-------------------
+==================
 
 - Corresponds to the version of the zope.exceptions package shipped as part of
   the Zope X3.0.0 release.
