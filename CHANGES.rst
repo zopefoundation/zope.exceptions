@@ -2,6 +2,12 @@
  zope.exceptions Changelog
 ===========================
 
+4.2.1 (unreleased)
+==================
+
+- Nothing changed yet.
+
+
 4.2.0 (2017-09-12)
 ==================
 
