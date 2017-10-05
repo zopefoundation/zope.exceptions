@@ -10,7 +10,7 @@
         :target: https://pypi.org/project/zope.exceptions/
         :alt: Supported Python versions
 
-.. image:: https://travis-ci.org/zopefoundation/zope.exceptions.png?branch=master
+.. image:: https://travis-ci.org/zopefoundation/zope.exceptions.svg?branch=master
         :target: https://travis-ci.org/zopefoundation/zope.exceptions
 
 .. image:: https://coveralls.io/repos/github/zopefoundation/zope.exceptions/badge.svg?branch=master
