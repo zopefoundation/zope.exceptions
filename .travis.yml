@@ -6,6 +6,11 @@ python:
     - 3.5
     - 3.6
     - pypy
+include:
+    matrix:
+        - python: "3.7"
+          dist: xenial
+          sudo: true
 install:
     - pip install -U pip setuptools
     - pip install -U coverage coveralls
