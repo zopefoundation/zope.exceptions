@@ -2,10 +2,10 @@
  zope.exceptions Changelog
 ===========================
 
-4.2.1 (unreleased)
-==================
+4.3 (2018-10-04)
+================
 
-- Added support for Python 3.7.
+- Add support for Python 3.7.
 
 
 4.2.0 (2017-09-12)
