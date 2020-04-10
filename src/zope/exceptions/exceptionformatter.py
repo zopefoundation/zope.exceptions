@@ -175,7 +175,7 @@ class TextExceptionFormatter(object):
 
     def formatException(self, etype, value, tb):
         # The next line provides a way to detect recursion.
-        __exception_formatter__ = 1  # noqa: F841
+        __exception_formatter__ = 1  # noqa
         result = []
         while tb is not None:
             if tb.tb_frame.f_locals.get('__exception_formatter__'):
@@ -207,7 +207,7 @@ class TextExceptionFormatter(object):
                 f = sys.exc_info()[2].tb_frame.f_back
 
         # The next line provides a way to detect recursion.
-        __exception_formatter__ = 1  # noqa: F841
+        __exception_formatter__ = 1  # noqa
         result = []
         while f is not None:
             if f.f_locals.get('__exception_formatter__'):
