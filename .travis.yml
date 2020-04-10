@@ -13,6 +13,8 @@ jobs:
       script: flake8 src setup.py
       after_success:
       env: CACHE_NAME=flake8
+  allow_failures:
+    - env: CACHE_NAME=flake8
 install:
   - pip install -U pip setuptools
   - pip install -U coverage coveralls
