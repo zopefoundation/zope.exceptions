@@ -174,7 +174,8 @@ class TextExceptionFormatter(object):
         return self.escape(exc_line)
 
     def formatException(self, etype, value, tb):
-        # The next line provides a way to detect recursion.
+        # The next line provides a way to detect recursion.  The 'noqa'
+        # comment disables a flake8 warning about the unused variable.
         __exception_formatter__ = 1  # noqa
         result = []
         while tb is not None:
@@ -206,7 +207,8 @@ class TextExceptionFormatter(object):
             except ZeroDivisionError:
                 f = sys.exc_info()[2].tb_frame.f_back
 
-        # The next line provides a way to detect recursion.
+        # The next line provides a way to detect recursion.  The 'noqa'
+        # comment disables a flake8 warning about the unused variable.
         __exception_formatter__ = 1  # noqa
         result = []
         while f is not None:
