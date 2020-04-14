@@ -121,13 +121,16 @@ class TextExceptionFormatterTests(unittest.TestCase):
     def test_formatSupplement_w_warnings(self):
         fmt = self._makeOne()
         supplement = DummySupplement()
-        supplement.warnings = ['Beware the ides of March!',
-                               'You\'re gonna get wasted.',
-                              ]
-        self.assertEqual(fmt.formatSupplement(supplement, tb=None),
-                         ['   - Warning: Beware the ides of March!',
-                          '   - Warning: You\'re gonna get wasted.',
-                         ])
+        supplement.warnings = [
+            'Beware the ides of March!',
+            'You\'re gonna get wasted.',
+        ]
+        self.assertEqual(
+            fmt.formatSupplement(supplement, tb=None),
+            [
+                '   - Warning: Beware the ides of March!',
+                '   - Warning: You\'re gonna get wasted.',
+            ])
 
     def test_formatSupplement_w_getInfo_empty(self):
         fmt = self._makeOne()
@@ -407,9 +410,10 @@ class TextExceptionFormatterTests(unittest.TestCase):
         expected = [
             '  File "dummy/filename.py", line 17, in dummy_function\n',
             '  File "dummy/filename.py", line 27, in dummy_function\n',
-            '(Recursive extractStack() stopped, trying traceback.format_stack)\n',
+            ('(Recursive extractStack() stopped,'
+             ' trying traceback.format_stack)\n'),
             '  Module dummy/filename.py, line 43, in dummy_function\n',
-            ]
+        ]
 
         self.assertEqual(expected, lines)
 
@@ -627,6 +631,7 @@ class Test_format_exception(unittest.TestCase):
     def test_multiple_levels(self):
         # Ensure many levels are shown in a traceback.
         HOW_MANY = 10
+
         def f(n):
             """Produces a (n + 1)-level traceback."""
             __traceback_info__ = 'level%d' % n
@@ -658,7 +663,8 @@ class Test_format_exception(unittest.TestCase):
             s = self._callFUT(False)
         lines = s.splitlines()[-3:]
         self.assertEqual(lines[0], '    syntax error')
-        self.assertTrue(lines[1].endswith('    ^')) #PyPy has a shorter prefix
+        # PyPy has a shorter prefix
+        self.assertTrue(lines[1].endswith('    ^'))
         self.assertEqual(lines[2], 'SyntaxError: invalid syntax')
 
     def test_traceback_info_non_ascii(self):
@@ -670,7 +676,6 @@ class Test_format_exception(unittest.TestCase):
 
         self.assertIsInstance(s, str)
         self.assertIn('Have a Snowman', s)
-
 
     def test_recursion_failure(self):
         from zope.exceptions.exceptionformatter import TextExceptionFormatter
@@ -711,13 +716,16 @@ class Test_format_exception(unittest.TestCase):
         expected = dedent("""\
             <p>Traceback (most recent call last):</p>
             <ul>
-            <li>  Module zope.exceptions.tests.test_exceptionformatter, line ABC, in test_format_exception_as_html<br />
+            <li>  Module {module}, line ABC, in {fn}<br />
                 exec('import')</li>
             </ul><p>  File "&lt;string&gt;", line 1<br />
                 import<br />
                      ^<br />
             SyntaxError: invalid syntax<br />
-            </p>""")
+            </p>""").format(
+                module='zope.exceptions.tests.test_exceptionformatter',
+                fn='test_format_exception_as_html',
+            )
         # HTML formatter uses Windows line endings for some reason.
         result = result.replace('\r\n', '\n')
         result = re.sub(r'line \d\d\d,', 'line ABC,', result)
@@ -856,6 +864,7 @@ class TestingTracebackSupplement(object):
     line = 634
     column = 57
     warnings = ['Repent, for the end is nigh']
+
     def __init__(self, expression):
         self.expression = expression
 
@@ -863,6 +872,7 @@ class TestingTracebackSupplement(object):
 class DummySupplement(object):
     def __init__(self, info=''):
         self._info = info
+
     def getInfo(self):
         return self._info
 
@@ -875,14 +885,17 @@ class DummyTB(object):
 class DummyFrame(object):
     f_lineno = 137
     f_back = None
+
     def __init__(self):
         self.f_locals = {}
         self.f_globals = {}
         self.f_code = DummyCode()
 
+
 class DummyCode(object):
     co_filename = 'dummy/filename.py'
     co_name = 'dummy_function'
+
 
 class _Monkey(object):
     # context-manager for replacing module names in the scope of a test.
@@ -898,12 +911,10 @@ class _Monkey(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         for key, value in self.to_restore.items():
-            if value is not self: # pragma: no cover
+            if value is not self:  # pragma: no cover
                 setattr(self.module, key, value)
             else:
                 delattr(self.module, key)
-
-
 
 
 def test_suite():

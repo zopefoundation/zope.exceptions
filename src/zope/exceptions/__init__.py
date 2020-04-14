@@ -16,6 +16,7 @@
 These exceptions are so general purpose that they don't belong in Zope
 application-specific packages.
 """
+
 from zope.exceptions.interfaces import DuplicationError
 from zope.exceptions.interfaces import IDuplicationError
 from zope.exceptions.interfaces import UserError
@@ -25,17 +26,27 @@ from zope.exceptions.exceptionformatter import format_exception
 from zope.exceptions.exceptionformatter import print_exception
 from zope.exceptions.exceptionformatter import extract_stack
 
+__all__ = [
+    'DuplicationError', 'IDuplicationError', 'UserError', 'IUserError',
+    'format_exception', 'print_exception', 'extract_stack',
+]
+
+
 # avoid dependency on zope.security:
 try:
-    import zope.security
-except ImportError as v: #pragma: no cover
+    import zope.security  # noqa: suppress unused import warning from flake8
+except ImportError as v:  # pragma: no cover
     # "ImportError: No module named security"
     if 'security' not in str(v):
         raise
-else: #pragma: no cover
+else:  # pragma: no cover
     from zope.security.interfaces import IUnauthorized
     from zope.security.interfaces import Unauthorized
     from zope.security.interfaces import IForbidden
     from zope.security.interfaces import IForbiddenAttribute
     from zope.security.interfaces import Forbidden
     from zope.security.interfaces import ForbiddenAttribute
+    __all__ += [
+        'IUnauthorized', 'Unauthorized', 'IForbidden', 'IForbiddenAttribute',
+        'Forbidden', 'ForbiddenAttribute',
+    ]

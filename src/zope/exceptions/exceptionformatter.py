@@ -92,7 +92,7 @@ class TextExceptionFormatter(object):
                 extra = getInfo()
                 if extra:
                     result.append(self.formatSupplementInfo(extra))
-            except: #pragma: no cover
+            except Exception:  # pragma: no cover
                 if DEBUG_EXCEPTION_FORMATTER:
                     traceback.print_exc()
                 # else just swallow the exception.
@@ -150,7 +150,7 @@ class TextExceptionFormatter(object):
             try:
                 supp = factory(*args)
                 result.extend(self.formatSupplement(supp, tb))
-            except: #pragma: no cover
+            except Exception:  # pragma: no cover
                 if DEBUG_EXCEPTION_FORMATTER:
                     traceback.print_exc()
                 # else just swallow the exception.
@@ -159,7 +159,7 @@ class TextExceptionFormatter(object):
             tbi = f_locals.get('__traceback_info__', None)
             if tbi is not None:
                 result.append(self.formatTracebackInfo(tbi))
-        except: #pragma: no cover
+        except Exception:  # pragma: no cover
             if DEBUG_EXCEPTION_FORMATTER:
                 traceback.print_exc()
             # else just swallow the exception.
@@ -174,8 +174,9 @@ class TextExceptionFormatter(object):
         return self.escape(exc_line)
 
     def formatException(self, etype, value, tb):
-        # The next line provides a way to detect recursion.
-        __exception_formatter__ = 1
+        # The next line provides a way to detect recursion.  The 'noqa'
+        # comment disables a flake8 warning about the unused variable.
+        __exception_formatter__ = 1  # noqa
         result = []
         while tb is not None:
             if tb.tb_frame.f_locals.get('__exception_formatter__'):
@@ -206,8 +207,9 @@ class TextExceptionFormatter(object):
             except ZeroDivisionError:
                 f = sys.exc_info()[2].tb_frame.f_back
 
-        # The next line provides a way to detect recursion.
-        __exception_formatter__ = 1
+        # The next line provides a way to detect recursion.  The 'noqa'
+        # comment disables a flake8 warning about the unused variable.
+        __exception_formatter__ = 1  # noqa
         result = []
         while f is not None:
             if f.f_locals.get('__exception_formatter__'):
@@ -250,10 +252,9 @@ class HTMLExceptionFormatter(TextExceptionFormatter):
                 s = str(s)
             except UnicodeError:
                 if hasattr(s, 'encode'):
-                    # We probably got a unicode string on
-                    # Python 2.
+                    # We probably got a unicode string on Python 2.
                     s = s.encode('utf-8')
-                else: # pragma: no cover
+                else:  # pragma: no cover
                     raise
         return escape(s, quote=False)
 
@@ -309,7 +310,7 @@ def print_exception(t, v, tb, limit=None, file=None, as_html=False,
     information to the traceback and accepts two options, 'as_html'
     and 'with_filenames'.
     """
-    if file is None: # pragma: no cover
+    if file is None:  # pragma: no cover
         file = sys.stderr
     lines = format_exception(t, v, tb, limit, as_html, with_filenames)
     for line in lines:

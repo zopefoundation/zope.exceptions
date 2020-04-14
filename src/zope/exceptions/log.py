@@ -21,6 +21,7 @@ from zope.exceptions.exceptionformatter import print_exception
 
 Buffer = io.StringIO if bytes is not str else io.BytesIO
 
+
 class Formatter(logging.Formatter):
 
     def formatException(self, ei):
