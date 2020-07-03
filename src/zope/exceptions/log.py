@@ -19,7 +19,7 @@ import io
 
 from zope.exceptions.exceptionformatter import print_exception
 
-Buffer = io.StringIO if bytes is not str else io.BytesIO
+Buffer = io.StringIO if bytes is not str else io.BytesIO  # PY2
 
 
 class Formatter(logging.Formatter):

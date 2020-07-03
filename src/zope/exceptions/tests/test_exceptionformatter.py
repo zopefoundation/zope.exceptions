@@ -17,6 +17,10 @@ import unittest
 import sys
 
 
+_version = sys.version_info
+IS_PY39_OR_GREATER = _version.major == 3 and _version.minor >= 9
+
+
 class TextExceptionFormatterTests(unittest.TestCase):
 
     def _getTargetClass(self):
@@ -725,7 +729,11 @@ class Test_format_exception(unittest.TestCase):
             </p>""").format(
                 module='zope.exceptions.tests.test_exceptionformatter',
                 fn='test_format_exception_as_html',
-            )
+        )
+        if IS_PY39_OR_GREATER:  # pragma: no cover
+            # Python 3.9 moves the pointer after the statement instead to the
+            # last character of it:
+            expected = expected.replace('^<br />', ' ^<br />')
         # HTML formatter uses Windows line endings for some reason.
         result = result.replace('\r\n', '\n')
         result = re.sub(r'line \d\d\d,', 'line ABC,', result)
