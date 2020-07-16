@@ -17,8 +17,7 @@ import unittest
 import sys
 
 
-_version = sys.version_info
-IS_PY39_OR_GREATER = _version.major == 3 and _version.minor >= 9
+IS_PY39_OR_GREATER = sys.version_info >= (3, 9)
 
 
 class TextExceptionFormatterTests(unittest.TestCase):
