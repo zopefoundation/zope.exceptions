@@ -5,7 +5,7 @@
 4.4 (unreleased)
 ================
 
-- Add support for Python 3.8 and 3.9
+- Add support for Python 3.8 and preliminary support for 3.9b4.
 
 - Drop support for Python 3.4 and 3.5.
 
