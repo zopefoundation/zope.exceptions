@@ -2,13 +2,11 @@ include *.rst
 include *.txt
 include .coveragerc
 
-recursive-include docs *
-recursive-include src *
-
-global-exclude *.pyc
-
-# added by check_manifest.py
-include *.py
-include .travis.yml
 include buildout.cfg
 include tox.ini
+
+recursive-include docs *.bat
+recursive-include docs *.py
+recursive-include docs *.rst
+recursive-include docs Makefile
+recursive-include docs/_static *
