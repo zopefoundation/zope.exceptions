@@ -2,7 +2,7 @@
  zope.exceptions Changelog
 ===========================
 
-4.4 (unreleased)
+4.4 (2020-07-16)
 ================
 
 - Add support for Python 3.8 and preliminary support for 3.9b4.
