@@ -668,7 +668,7 @@ class Test_format_exception(unittest.TestCase):
         self.assertEqual(lines[0], '    syntax error')
         # PyPy has a shorter prefix
         self.assertTrue(lines[1].endswith('    ^'))
-        self.assertEqual(lines[2], 'SyntaxError: invalid syntax')
+        self.assertRegex(lines[2], '^SyntaxError: invalid syntax')
 
     def test_traceback_info_non_ascii(self):
         __traceback_info__ = u"Have a Snowman: \u2603"
