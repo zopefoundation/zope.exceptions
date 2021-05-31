@@ -26,26 +26,6 @@ def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
 
-def alltests():
-    import os
-    import sys
-    import unittest
-    # use the zope.testrunner machinery to find all the
-    # test suites we've put under ourselves
-    import zope.testrunner.find
-    import zope.testrunner.options
-    here = os.path.abspath(os.path.join(os.path.dirname(__file__), 'src'))
-    args = sys.argv[:]
-    defaults = ["--test-path", here]
-    options = zope.testrunner.options.get_options(args, defaults)
-    suites = list(zope.testrunner.find.find_suites(options))
-    return unittest.TestSuite(suites)
-
-
-tests_require = [
-    'zope.testrunner',
-]
-
 setup(
     name='zope.exceptions',
     version='4.5.dev0',
@@ -64,9 +44,11 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Natural Language :: English',
@@ -75,10 +57,16 @@ setup(
         'Framework :: Zope :: 3',
     ],
     url='https://github.com/zopefoundation/zope.exceptions',
+    project_urls={
+        'Issue Tracker': ('https://github.com/zopefoundation/'
+                          'zope.exceptions/issues'),
+        'Sources': 'https://github.com/zopefoundation/zope.exceptions',
+    },
     license='ZPL 2.1',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     namespace_packages=['zope'],
+    python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*',
     install_requires=[
         'setuptools',
         'zope.interface',
@@ -86,11 +74,10 @@ setup(
     tests_require=[
         'zope.testrunner',
     ],
-    test_suite='__main__.alltests',
     include_package_data=True,
     zip_safe=False,
     extras_require={
         'docs': ['Sphinx', 'repoze.sphinx.autointerface'],
-        'test': tests_require,
+        'test': ['zope.testrunner'],
     },
 )
