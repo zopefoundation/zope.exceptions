@@ -71,9 +71,6 @@ setup(
         'setuptools',
         'zope.interface',
     ],
-    tests_require=[
-        'zope.testrunner',
-    ],
     include_package_data=True,
     zip_safe=False,
     extras_require={
