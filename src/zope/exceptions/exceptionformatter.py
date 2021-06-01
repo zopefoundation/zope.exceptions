@@ -17,7 +17,7 @@ optionally in HTML.
 import sys
 try:
     from html import escape
-except ImportError:
+except ImportError:  # pragma: PY2
     from cgi import escape
 import linecache
 import traceback
@@ -47,7 +47,7 @@ class TextExceptionFormatter(object):
 
     def formatSupplementLine(self, line):
         result = '   - %s' % line
-        if not isinstance(result, str):
+        if not isinstance(result, str):  # pragma: PY2
             # Must be an Python 2, and must be a unicode `line`
             # and we upconverted the result to a unicode
             result = result.encode('utf-8')
@@ -248,9 +248,9 @@ class HTMLExceptionFormatter(TextExceptionFormatter):
 
     def escape(self, s):
         if not isinstance(s, str):
-            try:
+            try:  # pragma: PY2
                 s = str(s)
-            except UnicodeError:
+            except UnicodeError:  # pragma: PY2
                 if hasattr(s, 'encode'):
                     # We probably got a unicode string on Python 2.
                     s = s.encode('utf-8')

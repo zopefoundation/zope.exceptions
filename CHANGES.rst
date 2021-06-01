@@ -5,7 +5,11 @@
 4.5 (unreleased)
 ================
 
-- Nothing changed yet.
+- Add official support for Python 3.9.
+
+- Undo dropping support for Python 3.5.
+
+- Drop support for running the tests using ``python setup.py test``.
 
 
 4.4 (2020-07-16)
