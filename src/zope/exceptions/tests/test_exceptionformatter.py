@@ -666,8 +666,7 @@ class Test_format_exception(unittest.TestCase):
             s = self._callFUT(False)
         lines = s.splitlines()[-3:]
         self.assertEqual(lines[0], '    syntax error')
-        # PyPy has a shorter prefix
-        self.assertTrue(lines[1].endswith('    ^'))
+        self.assertIn('    ^', lines[1])
         self.assertTrue(lines[2].startswith('SyntaxError: invalid syntax'),
                         lines[2])
 
