@@ -5,7 +5,7 @@
 4.5 (unreleased)
 ================
 
-- Add official support for Python 3.9.
+- Add official support for Python 3.9 and 3.10.
 
 - Undo dropping support for Python 3.5.
 
