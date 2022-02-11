@@ -2,6 +2,12 @@
  zope.exceptions Changelog
 ===========================
 
+4.6 (unreleased)
+================
+
+- Nothing changed yet.
+
+
 4.5 (2022-02-11)
 ================
 
