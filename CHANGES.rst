@@ -2,7 +2,7 @@
  zope.exceptions Changelog
 ===========================
 
-4.5 (unreleased)
+4.5 (2022-02-11)
 ================
 
 - Add official support for Python 3.9 and 3.10.

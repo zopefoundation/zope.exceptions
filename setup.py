@@ -28,7 +28,7 @@ def read(*rnames):
 
 setup(
     name='zope.exceptions',
-    version='4.5.dev0',
+    version='4.5',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     description='Zope Exceptions',
