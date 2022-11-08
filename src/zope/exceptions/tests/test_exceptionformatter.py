@@ -278,6 +278,47 @@ class TextExceptionFormatterTests(unittest.TestCase):
                          ''.join(
                              traceback.format_exception_only(ValueError, err)))
 
+    def test_formatExceptionOnly_httperror(self):
+        # On Python 3.11.0 HTTPError may behave wrongly, giving a KeyError in
+        # tempfile when Python tries to format it.
+        # See https://github.com/python/cpython/issues/90113
+        # or examples in Plone tests, especially doctests:
+        # https://github.com/plone/Products.CMFPlone/issues/3663
+        # We don't want to get an error when we format an error,
+        # so let's compensate in our code.
+        try:
+            from urllib.error import HTTPError
+        except ImportError:
+            # BBB for Python 2.7
+            from urllib2 import HTTPError
+        fmt = self._makeOne()
+        err = HTTPError('url', 400, 'oops', [], None)
+        result = fmt.formatExceptionOnly(HTTPError, err).strip()
+        # The output can differ too much per Python version,
+        # but it is just one line when stripped.
+        self.assertIn("400", result)
+        self.assertIn("oops", result)
+        self.assertIn("Error", result)
+        self.assertEqual(len(result.splitlines()), 1)
+
+    def test_formatException_httperror(self):
+        # See test_formatExceptionOnly_httperror.
+        # Here we check that formatException works.
+        try:
+            from urllib.error import HTTPError
+        except ImportError:
+            # BBB for Python 2.7
+            from urllib2 import HTTPError
+        fmt = self._makeOne()
+        err = HTTPError('url', 400, 'oops', [], None)
+        result = fmt.formatException(HTTPError, err, None)
+        self.assertEqual(result[0], 'Traceback (most recent call last):\n')
+        last = result[-1]
+        # The output can differ per Python version.
+        self.assertIn("400", last)
+        self.assertIn("oops", last)
+        self.assertIn("Error", last)
+
     def test_formatLastLine(self):
         fmt = self._makeOne()
         self.assertEqual(fmt.formatLastLine('XXX'), 'XXX')

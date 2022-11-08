@@ -171,7 +171,14 @@ class TextExceptionFormatter(object):
         return self.line_sep.join(result)
 
     def formatExceptionOnly(self, etype, value):
-        result = ''.join(traceback.format_exception_only(etype, value))
+        # We don't want to get an error when we format an error, so we
+        # compensate in our code.  For example, on Python 3.11.0 HTTPError
+        # gives an unhelpful KeyError in tempfile when Python formats it.
+        # See https://github.com/python/cpython/issues/90113
+        try:
+            result = ''.join(traceback.format_exception_only(etype, value))
+        except Exception:
+            result = str(value)
         return result
 
     def formatLastLine(self, exc_line):
