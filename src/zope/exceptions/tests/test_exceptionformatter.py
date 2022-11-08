@@ -886,8 +886,11 @@ class DummySupplement(object):
 
 
 class DummyTB(object):
+    # https://docs.python.org/3/reference/datamodel.html#traceback-objects
+    tb_frame = None
     tb_lineno = 14
     tb_next = None
+    tb_lasti = -1
 
 
 class DummyFrame(object):
@@ -903,6 +906,12 @@ class DummyFrame(object):
 class DummyCode(object):
     co_filename = 'dummy/filename.py'
     co_name = 'dummy_function'
+
+    def co_positions(self):
+        # New in Python 3.11.
+        # https://docs.python.org/3/reference/datamodel.html#codeobject.co_positions
+        # This is not called for DummyTB because there tb_lasti is -1.
+        return (None, None, None, None)
 
 
 class _Monkey(object):
