@@ -15,12 +15,16 @@
 optionally in HTML.
 """
 import sys
+
+
 try:
     from html import escape
 except ImportError:  # pragma: PY2
     from cgi import escape
+
 import linecache
 import traceback
+
 
 DEBUG_EXCEPTION_FORMATTER = 1
 

@@ -13,8 +13,8 @@
 ##############################################################################
 """ExceptionFormatter tests.
 """
-import unittest
 import sys
+import unittest
 
 
 IS_PY39_OR_GREATER = sys.version_info >= (3, 9)
@@ -709,9 +709,10 @@ class Test_format_exception(unittest.TestCase):
 
     def test_format_exception_as_html(self):
         # Test for format_exception (as_html=True)
-        from zope.exceptions.exceptionformatter import format_exception
-        from textwrap import dedent
         import re
+        from textwrap import dedent
+
+        from zope.exceptions.exceptionformatter import format_exception
         try:
             exec('import')
         except SyntaxError:

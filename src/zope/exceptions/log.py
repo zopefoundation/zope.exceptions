@@ -14,10 +14,11 @@
 """Log formatter that enhances tracebacks with extra information.
 """
 
-import logging
 import io
+import logging
 
 from zope.exceptions.exceptionformatter import print_exception
+
 
 Buffer = io.StringIO if bytes is not str else io.BytesIO  # PY2
 

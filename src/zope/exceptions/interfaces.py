@@ -28,8 +28,8 @@ arguments to pass to the factory.  The traceback formatter makes an
 effort to clearly present the information provided by the
 ITracebackSupplement.
 """
-from zope.interface import Interface
 from zope.interface import Attribute
+from zope.interface import Interface
 from zope.interface import implementer
 
 
