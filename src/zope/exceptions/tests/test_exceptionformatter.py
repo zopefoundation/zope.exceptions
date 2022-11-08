@@ -931,7 +931,7 @@ class DummyTB(object):
     tb_frame = None
     tb_lineno = 14
     tb_next = None
-    tb_lasti = -1
+    tb_lasti = 1
 
 
 class DummyFrame(object):
@@ -951,8 +951,13 @@ class DummyCode(object):
     def co_positions(self):
         # New in Python 3.11.
         # https://docs.python.org/3/reference/datamodel.html#codeobject.co_positions
-        # This is not called for DummyTB because there tb_lasti is -1.
-        return (None, None, None, None)
+        # Note that this is not called for DummyTB if you have tb_lasti=-1.
+        # The 27 in the return value is chosen to match tb_recurse.tb_lineno=27
+        # in test_formatException_recursion_in_tb_stack in this file.
+        # The rest is random.
+        # Note that this code is only called on Python 3.11, so we mark it for
+        # the coverage tool.
+        return [(27, 2, 3, 4)]  # pragma: no cover
 
 
 class _Monkey(object):

@@ -177,7 +177,8 @@ class TextExceptionFormatter(object):
         # See https://github.com/python/cpython/issues/90113
         try:
             result = ''.join(traceback.format_exception_only(etype, value))
-        except Exception:
+        except Exception:  # pragma: no cover
+            # This code branch is only covered on Python 3.11.
             result = str(value)
         return result
 
