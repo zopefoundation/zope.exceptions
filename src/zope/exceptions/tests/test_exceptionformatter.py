@@ -17,6 +17,13 @@ import sys
 import unittest
 
 
+try:
+    from urllib.error import HTTPError
+except ImportError:
+    # BBB for Python 2.7
+    from urllib2 import HTTPError
+
+
 IS_PY39_OR_GREATER = sys.version_info >= (3, 9)
 
 
@@ -286,11 +293,6 @@ class TextExceptionFormatterTests(unittest.TestCase):
         # https://github.com/plone/Products.CMFPlone/issues/3663
         # We don't want to get an error when we format an error,
         # so let's compensate in our code.
-        try:
-            from urllib.error import HTTPError
-        except ImportError:
-            # BBB for Python 2.7
-            from urllib2 import HTTPError
         fmt = self._makeOne()
         err = HTTPError('url', 400, 'oops', [], None)
         result = fmt.formatExceptionOnly(HTTPError, err).strip()
@@ -304,11 +306,6 @@ class TextExceptionFormatterTests(unittest.TestCase):
     def test_formatException_httperror(self):
         # See test_formatExceptionOnly_httperror.
         # Here we check that formatException works.
-        try:
-            from urllib.error import HTTPError
-        except ImportError:
-            # BBB for Python 2.7
-            from urllib2 import HTTPError
         fmt = self._makeOne()
         err = HTTPError('url', 400, 'oops', [], None)
         result = fmt.formatException(HTTPError, err, None)
@@ -955,7 +952,7 @@ class DummyCode(object):
         # The 27 in the return value is chosen to match tb_recurse.tb_lineno=27
         # in test_formatException_recursion_in_tb_stack in this file.
         # The rest is random.
-        # Note that this code is only called on Python 3.11, so we mark it for
+        # Note that this code is only called on Python 3.11+, so we mark it for
         # the coverage tool.
         return [(27, 2, 3, 4)]  # pragma: no cover
 
