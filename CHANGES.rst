@@ -2,7 +2,7 @@
  zope.exceptions Changelog
 ===========================
 
-4.6 (unreleased)
+4.6 (2022-11-10)
 ================
 
 - Catch exceptions in ``formatExceptionOnly``.
