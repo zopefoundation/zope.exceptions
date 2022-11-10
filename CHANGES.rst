@@ -5,7 +5,11 @@
 4.6 (unreleased)
 ================
 
-- Nothing changed yet.
+- Catch exceptions in ``formatExceptionOnly``.
+  Getting an exception when reporting about a different exception is not helpful.
+  On Python 3.11 this is needed for some HTTPErrors.
+
+- Add official support for Python 3.11.
 
 
 4.5 (2022-02-11)

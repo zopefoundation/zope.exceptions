@@ -13,8 +13,15 @@
 ##############################################################################
 """ExceptionFormatter tests.
 """
-import unittest
 import sys
+import unittest
+
+
+try:
+    from urllib.error import HTTPError
+except ImportError:
+    # BBB for Python 2.7
+    from urllib2 import HTTPError
 
 
 IS_PY39_OR_GREATER = sys.version_info >= (3, 9)
@@ -277,6 +284,37 @@ class TextExceptionFormatterTests(unittest.TestCase):
         self.assertEqual(fmt.formatExceptionOnly(ValueError, err),
                          ''.join(
                              traceback.format_exception_only(ValueError, err)))
+
+    def test_formatExceptionOnly_httperror(self):
+        # On Python 3.11.0 HTTPError may behave wrongly, giving a KeyError in
+        # tempfile when Python tries to format it.
+        # See https://github.com/python/cpython/issues/90113
+        # or examples in Plone tests, especially doctests:
+        # https://github.com/plone/Products.CMFPlone/issues/3663
+        # We don't want to get an error when we format an error,
+        # so let's compensate in our code.
+        fmt = self._makeOne()
+        err = HTTPError('url', 400, 'oops', [], None)
+        result = fmt.formatExceptionOnly(HTTPError, err).strip()
+        # The output can differ too much per Python version,
+        # but it is just one line when stripped.
+        self.assertIn("400", result)
+        self.assertIn("oops", result)
+        self.assertIn("Error", result)
+        self.assertEqual(len(result.splitlines()), 1)
+
+    def test_formatException_httperror(self):
+        # See test_formatExceptionOnly_httperror.
+        # Here we check that formatException works.
+        fmt = self._makeOne()
+        err = HTTPError('url', 400, 'oops', [], None)
+        result = fmt.formatException(HTTPError, err, None)
+        self.assertEqual(result[0], 'Traceback (most recent call last):\n')
+        last = result[-1]
+        # The output can differ per Python version.
+        self.assertIn("400", last)
+        self.assertIn("oops", last)
+        self.assertIn("Error", last)
 
     def test_formatLastLine(self):
         fmt = self._makeOne()
@@ -709,9 +747,10 @@ class Test_format_exception(unittest.TestCase):
 
     def test_format_exception_as_html(self):
         # Test for format_exception (as_html=True)
-        from zope.exceptions.exceptionformatter import format_exception
-        from textwrap import dedent
         import re
+        from textwrap import dedent
+
+        from zope.exceptions.exceptionformatter import format_exception
         try:
             exec('import')
         except SyntaxError:
@@ -885,8 +924,11 @@ class DummySupplement(object):
 
 
 class DummyTB(object):
+    # https://docs.python.org/3/reference/datamodel.html#traceback-objects
+    tb_frame = None
     tb_lineno = 14
     tb_next = None
+    tb_lasti = 1
 
 
 class DummyFrame(object):
@@ -902,6 +944,17 @@ class DummyFrame(object):
 class DummyCode(object):
     co_filename = 'dummy/filename.py'
     co_name = 'dummy_function'
+
+    def co_positions(self):
+        # New in Python 3.11.
+        # https://docs.python.org/3/reference/datamodel.html#codeobject.co_positions
+        # Note that this is not called for DummyTB if you have tb_lasti=-1.
+        # The 27 in the return value is chosen to match tb_recurse.tb_lineno=27
+        # in test_formatException_recursion_in_tb_stack in this file.
+        # The rest is random.
+        # Note that this code is only called on Python 3.11+, so we mark it for
+        # the coverage tool.
+        return [(27, 2, 3, 4)]  # pragma: no cover
 
 
 class _Monkey(object):
