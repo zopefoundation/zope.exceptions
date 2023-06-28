@@ -14,22 +14,16 @@
 """An exception formatter that shows traceback supplements and traceback info,
 optionally in HTML.
 """
-import sys
-
-
-try:
-    from html import escape
-except ImportError:  # pragma: PY2
-    from cgi import escape
-
 import linecache
+import sys
 import traceback
+from html import escape
 
 
 DEBUG_EXCEPTION_FORMATTER = 1
 
 
-class TextExceptionFormatter(object):
+class TextExceptionFormatter:
 
     line_sep = '\n'
 
@@ -50,12 +44,7 @@ class TextExceptionFormatter(object):
         return limit
 
     def formatSupplementLine(self, line):
-        result = '   - %s' % line
-        if not isinstance(result, str):  # pragma: PY2
-            # Must be an Python 2, and must be a unicode `line`
-            # and we upconverted the result to a unicode
-            result = result.encode('utf-8')
-        return result
+        return f'   - {line}'
 
     def formatSourceURL(self, url):
         return [self.formatSupplementLine(url)]
@@ -74,7 +63,7 @@ class TextExceptionFormatter(object):
         col = getattr(supplement, 'column', -1)
         if line:
             if col is not None and col >= 0:
-                result.append(fmtLine('Line %s, Column %s' % (
+                result.append(fmtLine('Line {}, Column {}'.format(
                     line, col)))
             else:
                 result.append(fmtLine('Line %s' % line))
@@ -106,7 +95,7 @@ class TextExceptionFormatter(object):
         return self.escape(info)
 
     def formatTracebackInfo(self, tbi):
-        return self.formatSupplementLine('__traceback_info__: %s' % (tbi, ))
+        return self.formatSupplementLine('__traceback_info__: {}'.format(tbi))
 
     def formatLine(self, tb=None, f=None):
         if tb and not f:
@@ -178,7 +167,7 @@ class TextExceptionFormatter(object):
         try:
             result = ''.join(traceback.format_exception_only(etype, value))
         except Exception:  # pragma: no cover
-            # This code branch is only covered on Python 3.11.
+            # This code branch is only covered on Python 3.11+.
             result = str(value)
         return result
 
@@ -259,15 +248,6 @@ class HTMLExceptionFormatter(TextExceptionFormatter):
     line_sep = '<br />\r\n'
 
     def escape(self, s):
-        if not isinstance(s, str):
-            try:  # pragma: PY2
-                s = str(s)
-            except UnicodeError:  # pragma: PY2
-                if hasattr(s, 'encode'):
-                    # We probably got a unicode string on Python 2.
-                    s = s.encode('utf-8')
-                else:  # pragma: no cover
-                    raise
         return escape(s, quote=False)
 
     def getPrefix(self):
@@ -285,7 +265,7 @@ class HTMLExceptionFormatter(TextExceptionFormatter):
     def formatTracebackInfo(self, tbi):
         s = self.escape(tbi)
         s = s.replace('\n', self.line_sep)
-        return '__traceback_info__: %s' % (s, )
+        return '__traceback_info__: {}'.format(s)
 
     def formatLine(self, tb=None, f=None):
         line = TextExceptionFormatter.formatLine(self, tb, f)
@@ -304,8 +284,7 @@ def format_exception(t, v, tb, limit=None, as_html=False,
     information to the traceback and accepts two options, 'as_html'
     and 'with_filenames'.
 
-    The result is a list of native strings; on Python 2 they are UTF-8
-    encoded if need be.
+    The result is a list of strings.
     """
     if as_html:
         fmt = HTMLExceptionFormatter(limit, with_filenames)

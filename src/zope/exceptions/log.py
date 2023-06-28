@@ -20,9 +20,6 @@ import logging
 from zope.exceptions.exceptionformatter import print_exception
 
 
-Buffer = io.StringIO if bytes is not str else io.BytesIO  # PY2
-
-
 class Formatter(logging.Formatter):
 
     def formatException(self, ei):
@@ -30,7 +27,7 @@ class Formatter(logging.Formatter):
 
         Uses zope.exceptions.exceptionformatter to generate the traceback.
         """
-        sio = Buffer()
+        sio = io.StringIO()
         print_exception(ei[0], ei[1], ei[2], file=sio, with_filenames=True)
         s = sio.getvalue()
         if s.endswith("\n"):

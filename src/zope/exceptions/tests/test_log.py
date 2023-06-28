@@ -41,7 +41,7 @@ class FormatterTests(unittest.TestCase):
 
     def test_unicode_traceback_info(self):
         import traceback
-        __traceback_info__ = u"Have a Snowman: \u2603"
+        __traceback_info__ = "Have a Snowman: \u2603"
         tb = DummyTB()
         tb.tb_frame.f_locals['__traceback_info__'] = __traceback_info__
         exc = ValueError('testing')
@@ -53,9 +53,7 @@ class FormatterTests(unittest.TestCase):
         self.assertEqual(lines[0], 'Traceback (most recent call last):')
         self.assertEqual(lines[1], '  File "dummy/filename.py", line 14, '
                                    'in dummy_function')
-        expected = '   - __traceback_info__: Have a Snowman: '
-        # utf-8 encoded on Python 2, unicode on Python 3
-        expected += '\xe2\x98\x83' if bytes is str else u'\u2603'
+        expected = '   - __traceback_info__: Have a Snowman: \u2603'
 
         self.assertEqual(lines[2], expected)
 
@@ -63,7 +61,7 @@ class FormatterTests(unittest.TestCase):
         self.assertEqual(lines[3], emsg[:-1])  # strip trailing \n from emsg
 
 
-class DummyTB(object):
+class DummyTB:
     tb_lineno = 14
     tb_next = None
 
@@ -71,7 +69,7 @@ class DummyTB(object):
         self.tb_frame = DummyFrame()
 
 
-class DummyFrame(object):
+class DummyFrame:
     f_lineno = 137
     f_back = None
 
@@ -81,6 +79,6 @@ class DummyFrame(object):
         self.f_code = DummyCode()
 
 
-class DummyCode(object):
+class DummyCode:
     co_filename = 'dummy/filename.py'
     co_name = 'dummy_function'
