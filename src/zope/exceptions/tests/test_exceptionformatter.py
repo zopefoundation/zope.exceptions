@@ -15,13 +15,7 @@
 """
 import sys
 import unittest
-
-
-try:
-    from urllib.error import HTTPError
-except ImportError:
-    # BBB for Python 2.7
-    from urllib2 import HTTPError
+from urllib.error import HTTPError
 
 
 IS_PY39_OR_GREATER = sys.version_info >= (3, 9)
@@ -164,13 +158,11 @@ class TextExceptionFormatterTests(unittest.TestCase):
                          '   - __traceback_info__: XYZZY')
 
     def test_formatTracebackInfo_unicode(self):
-        __traceback_info__ = u"Have a Snowman: \u2603"
+        __traceback_info__ = "Have a Snowman: \u2603"
         fmt = self._makeOne()
 
         result = fmt.formatTracebackInfo(__traceback_info__)
-        expected = '   - __traceback_info__: Have a Snowman: '
-        # utf-8 encoded on Python 2, unicode on Python 3
-        expected += '\xe2\x98\x83' if bytes is str else u'\u2603'
+        expected = '   - __traceback_info__: Have a Snowman: \u2603'
         self.assertIsInstance(result, str)
         self.assertEqual(result, expected)
 
@@ -688,7 +680,7 @@ class Test_format_exception(unittest.TestCase):
             self.assertTrue(s.find('level%d' % n) >= 0, s)
 
     def test_quote_last_line(self):
-        class C(object):
+        class C:
             pass
         try:
             raise TypeError(C())
@@ -709,7 +701,7 @@ class Test_format_exception(unittest.TestCase):
                         lines[2])
 
     def test_traceback_info_non_ascii(self):
-        __traceback_info__ = u"Have a Snowman: \u2603"
+        __traceback_info__ = "Have a Snowman: \u2603"
         try:
             raise TypeError()
         except TypeError:
@@ -850,7 +842,7 @@ class Test_extract_stack(unittest.TestCase):
 
     def test_traceback_info_html(self):
         try:
-            __traceback_info__ = u"Adam & Eve"
+            __traceback_info__ = "Adam & Eve"
             raise ExceptionForTesting
         except ExceptionForTesting:
             s = self._callFUT(True)
@@ -859,7 +851,7 @@ class Test_extract_stack(unittest.TestCase):
     def test_traceback_supplement_text(self):
         try:
             __traceback_supplement__ = (TestingTracebackSupplement,
-                                        u"You're one in a million")
+                                        "You're one in a million")
             raise ExceptionForTesting
         except ExceptionForTesting:
             s = self._callFUT(False)
@@ -905,7 +897,7 @@ class ExceptionForTesting(Exception):
     pass
 
 
-class TestingTracebackSupplement(object):
+class TestingTracebackSupplement:
     source_url = '/somepath'
     line = 634
     column = 57
@@ -915,7 +907,7 @@ class TestingTracebackSupplement(object):
         self.expression = expression
 
 
-class DummySupplement(object):
+class DummySupplement:
     def __init__(self, info=''):
         self._info = info
 
@@ -923,7 +915,7 @@ class DummySupplement(object):
         return self._info
 
 
-class DummyTB(object):
+class DummyTB:
     # https://docs.python.org/3/reference/datamodel.html#traceback-objects
     tb_frame = None
     tb_lineno = 14
@@ -931,7 +923,7 @@ class DummyTB(object):
     tb_lasti = 1
 
 
-class DummyFrame(object):
+class DummyFrame:
     f_lineno = 137
     f_back = None
 
@@ -941,7 +933,7 @@ class DummyFrame(object):
         self.f_code = DummyCode()
 
 
-class DummyCode(object):
+class DummyCode:
     co_filename = 'dummy/filename.py'
     co_name = 'dummy_function'
 
@@ -957,7 +949,7 @@ class DummyCode(object):
         return [(27, 2, 3, 4)]  # pragma: no cover
 
 
-class _Monkey(object):
+class _Monkey:
     # context-manager for replacing module names in the scope of a test.
     def __init__(self, module, **kw):
         self.module = module
@@ -975,7 +967,3 @@ class _Monkey(object):
                 setattr(self.module, key, value)
             else:
                 delattr(self.module, key)
-
-
-def test_suite():
-    return unittest.defaultTestLoader.loadTestsFromName(__name__)
