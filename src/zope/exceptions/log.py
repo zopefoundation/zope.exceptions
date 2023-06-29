@@ -30,6 +30,5 @@ class Formatter(logging.Formatter):
         sio = io.StringIO()
         print_exception(ei[0], ei[1], ei[2], file=sio, with_filenames=True)
         s = sio.getvalue()
-        if s.endswith("\n"):
-            s = s[:-1]
+        s = s[:-1] if s.endswith("\n") else s
         return s
