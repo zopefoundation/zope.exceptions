@@ -2,6 +2,12 @@
  zope.exceptions Changelog
 ===========================
 
+5.0.2 (unreleased)
+==================
+
+- Nothing changed yet.
+
+
 5.0.1 (2023-07-11)
 ==================
 
