@@ -514,6 +514,10 @@ class HTMLExceptionFormatterTests(unittest.TestCase):
         fmt = self._makeOne()
         self.assertEqual(fmt.escape('XXX'), 'XXX')
 
+    def test_escape_non_str(self):
+        fmt = self._makeOne()
+        self.assertEqual(fmt.escape(123), '123')
+
     def test_escape_w_markup(self):
         fmt = self._makeOne()
         self.assertEqual(fmt.escape('<span>XXX & YYY<span>'),
