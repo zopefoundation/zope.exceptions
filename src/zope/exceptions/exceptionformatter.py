@@ -248,7 +248,7 @@ class HTMLExceptionFormatter(TextExceptionFormatter):
     line_sep = '<br />\r\n'
 
     def escape(self, s):
-        return escape(s, quote=False)
+        return escape(str(s), quote=False)
 
     def getPrefix(self):
         return '<p>Traceback (most recent call last):</p>\r\n<ul>'

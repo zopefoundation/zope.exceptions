@@ -5,7 +5,8 @@
 5.1 (unreleased)
 ================
 
-- Nothing changed yet.
+- Fix issue introduced in the last release which is breaking
+  ``HTMLExceptionFormatter`` when using non-str ``__traceback_info__``.
 
 
 5.0 (2023-06-29)
