@@ -2,8 +2,8 @@
  zope.exceptions Changelog
 ===========================
 
-5.1 (unreleased)
-================
+5.0.1 (2023-07-11)
+==================
 
 - Fix issue introduced in the last release which is breaking
   ``HTMLExceptionFormatter`` when using non-str ``__traceback_info__``.
