@@ -17,8 +17,8 @@ import importlib
 import pathlib
 import sys
 import tempfile
-import unittest
 import textwrap
+import unittest
 import zipfile
 from urllib.error import HTTPError
 
