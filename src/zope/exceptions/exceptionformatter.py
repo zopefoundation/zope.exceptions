@@ -123,6 +123,7 @@ class TextExceptionFormatter:
         result.append(self.escape(s))
 
         # Append the source line, if available
+        linecache.lazycache(filename, f_globals)
         line = linecache.getline(filename, lineno)
         if line:
             result.append("    " + self.escape(line.strip()))
