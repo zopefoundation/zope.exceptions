@@ -18,6 +18,7 @@ import pathlib
 import sys
 import tempfile
 import unittest
+import textwrap
 import zipfile
 from urllib.error import HTTPError
 
@@ -748,14 +749,13 @@ class Test_format_exception(unittest.TestCase):
     def test_format_exception_as_html(self):
         # Test for format_exception (as_html=True)
         import re
-        from textwrap import dedent
 
         from zope.exceptions.exceptionformatter import format_exception
         try:
             exec('import')
         except SyntaxError:
             result = ''.join(format_exception(*sys.exc_info(), as_html=True))
-        expected = dedent("""\
+        expected = textwrap.dedent("""\
             <p>Traceback (most recent call last):</p>
             <ul>
             <li>  Module {module}, line ABC, in {fn}<br />
