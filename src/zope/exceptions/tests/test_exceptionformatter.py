@@ -795,7 +795,7 @@ class Test_format_exception(unittest.TestCase):
                     textwrap.dedent("""
                         def f():
                             1 / 0
-                    """)
+                    """))
             sys.path.insert(0, str(module_zipfile))
             try:
                 importlib.import_module(module_name).f()
