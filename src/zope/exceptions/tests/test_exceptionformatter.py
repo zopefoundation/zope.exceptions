@@ -792,10 +792,10 @@ class Test_format_exception(unittest.TestCase):
             with zipfile.ZipFile(module_zipfile, "w") as zf:
                 zf.writestr(
                     zipfile.ZipInfo(f"{module_name}/__init__.py"),
-                    """
-def f():
-    1 / 0
-""")
+                    textwrap.dedent("""
+                        def f():
+                            1 / 0
+                    """)
             sys.path.insert(0, str(module_zipfile))
             try:
                 importlib.import_module(module_name).f()
