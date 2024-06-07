@@ -7,6 +7,8 @@
 
 - Add support for Python 3.12.
 
+- Include code from PEP302 loaders in tracebacks
+
 
 5.0.1 (2023-07-11)
 ==================

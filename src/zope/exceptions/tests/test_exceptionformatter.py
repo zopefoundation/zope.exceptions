@@ -13,8 +13,13 @@
 ##############################################################################
 """ExceptionFormatter tests.
 """
+import importlib
+import pathlib
 import sys
+import tempfile
+import textwrap
 import unittest
+import zipfile
 from urllib.error import HTTPError
 
 
@@ -744,14 +749,13 @@ class Test_format_exception(unittest.TestCase):
     def test_format_exception_as_html(self):
         # Test for format_exception (as_html=True)
         import re
-        from textwrap import dedent
 
         from zope.exceptions.exceptionformatter import format_exception
         try:
             exec('import')
         except SyntaxError:
             result = ''.join(format_exception(*sys.exc_info(), as_html=True))
-        expected = dedent("""\
+        expected = textwrap.dedent("""\
             <p>Traceback (most recent call last):</p>
             <ul>
             <li>  Module {module}, line ABC, in {fn}<br />
@@ -773,6 +777,32 @@ class Test_format_exception(unittest.TestCase):
         result = re.sub(r'line \d\d\d,', 'line ABC,', result)
         self.maxDiff = None
         self.assertEqual(expected, result)
+
+    def test_pep302_loader_source_in_traceback(self):
+        sys_path = sys.path[::]
+
+        def restore_sys_path():
+            sys.path[::] = sys_path
+        self.addCleanup(restore_sys_path)
+
+        module_name = self._testMethodName
+        with tempfile.TemporaryDirectory() as td:
+            td = pathlib.Path(td)
+            module_zipfile = td / f"{module_name}.zip"
+            with zipfile.ZipFile(module_zipfile, "w") as zf:
+                zf.writestr(
+                    zipfile.ZipInfo(f"{module_name}/__init__.py"),
+                    textwrap.dedent("""
+                        def f():
+                            1 / 0
+                    """))
+            sys.path.insert(0, str(module_zipfile))
+            try:
+                importlib.import_module(module_name).f()
+            except ZeroDivisionError:
+                s = self._callFUT(False)
+
+        self.assertIn('1 / 0', s)
 
 
 class Test_print_exception(unittest.TestCase):
