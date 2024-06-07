@@ -2,8 +2,8 @@
  zope.exceptions Changelog
 ===========================
 
-5.0.2 (unreleased)
-==================
+5.1 (2024-06-07)
+================
 
 - Add support for Python 3.12.
 
