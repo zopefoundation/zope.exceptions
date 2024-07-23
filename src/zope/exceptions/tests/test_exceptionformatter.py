@@ -24,6 +24,7 @@ from urllib.error import HTTPError
 
 
 IS_PY39_OR_GREATER = sys.version_info >= (3, 9)
+IS_PY313_OR_GREATER = sys.version_info >= (3, 13)
 
 
 class TextExceptionFormatterTests(unittest.TestCase):
@@ -772,6 +773,9 @@ class Test_format_exception(unittest.TestCase):
             # Python 3.9 moves the pointer after the statement instead to the
             # last character of it:
             expected = expected.replace('^<br />', ' ^<br />')
+        if IS_PY313_OR_GREATER:  # pragma: no cover
+            # Python 3.13 changed the text of the SyntaxError
+            expected = expected.replace("invalid syntax", "Expected one or more names after 'import'")
         # HTML formatter uses Windows line endings for some reason.
         result = result.replace('\r\n', '\n')
         result = re.sub(r'line \d\d\d,', 'line ABC,', result)
