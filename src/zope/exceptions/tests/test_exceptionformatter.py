@@ -23,7 +23,8 @@ import zipfile
 from urllib.error import HTTPError
 
 
-IS_PY39_OR_GREATER = sys.version_info >= (3, 9)
+IS_PY38_OR_OLDER = sys.version_info < (3, 9)
+IS_PY312_OR_OLDER = sys.version_info < (3, 13)
 
 
 class TextExceptionFormatterTests(unittest.TestCase):
@@ -762,16 +763,20 @@ class Test_format_exception(unittest.TestCase):
                 exec('import')</li>
             </ul><p>  File "&lt;string&gt;", line 1<br />
                 import<br />
-                     ^<br />
-            SyntaxError: invalid syntax<br />
+                      ^<br />
+            SyntaxError: Expected one or more names after 'import'<br />
             </p>""").format(
-                module='zope.exceptions.tests.test_exceptionformatter',
-                fn='test_format_exception_as_html',
+            module='zope.exceptions.tests.test_exceptionformatter',
+            fn='test_format_exception_as_html',
         )
-        if IS_PY39_OR_GREATER:  # pragma: no cover
-            # Python 3.9 moves the pointer after the statement instead to the
-            # last character of it:
-            expected = expected.replace('^<br />', ' ^<br />')
+        if IS_PY38_OR_OLDER:  # pragma: no cover
+            # Python <= 3.8 hand the pointer at the last character of the
+            # statement:
+            expected = expected.replace(' ^<br />', '^<br />')
+        if IS_PY312_OR_OLDER:  # pragma: no cover
+            # Python <= 3.12 had a different error message:
+            expected = expected.replace(
+                "Expected one or more names after 'import'", "invalid syntax")
         # HTML formatter uses Windows line endings for some reason.
         result = result.replace('\r\n', '\n')
         result = re.sub(r'line \d\d\d,', 'line ABC,', result)
