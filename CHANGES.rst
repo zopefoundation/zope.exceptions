@@ -7,6 +7,8 @@
 
 - Drop support for Python 3.7.
 
+- Add preliminary support for Python 3.13 as of 3.13.rc1
+
 
 5.1 (2024-06-07)
 ================
