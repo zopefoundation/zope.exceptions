@@ -27,16 +27,20 @@ from zope.exceptions.interfaces import UserError
 
 
 __all__ = [
-    'DuplicationError', 'IDuplicationError', 'UserError', 'IUserError',
-    'format_exception', 'print_exception', 'extract_stack',
+    'DuplicationError',
+    'IDuplicationError',
+    'UserError',
+    'IUserError',
+    'format_exception',
+    'print_exception',
+    'extract_stack',
 ]
-
 
 # avoid dependency on zope.security:
 try:
     import zope.security  # noqa: suppress unused import warning from flake8
-except ImportError as v:  # pragma: no cover
-    # "ImportError: No module named security"
+except ModuleNotFoundError as v:  # pragma: no cover
+    # "ModuleNotFoundError: No module named security"
     if 'security' not in str(v):
         raise
 else:  # pragma: no cover
@@ -47,6 +51,10 @@ else:  # pragma: no cover
     from zope.security.interfaces import IUnauthorized
     from zope.security.interfaces import Unauthorized
     __all__ += [
-        'IUnauthorized', 'Unauthorized', 'IForbidden', 'IForbiddenAttribute',
-        'Forbidden', 'ForbiddenAttribute',
+        'IUnauthorized',
+        'Unauthorized',
+        'IForbidden',
+        'IForbiddenAttribute',
+        'Forbidden',
+        'ForbiddenAttribute',
     ]
