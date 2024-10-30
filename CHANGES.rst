@@ -2,7 +2,7 @@
  zope.exceptions Changelog
 ===========================
 
-5.2 (unreleased)
+5.2 (2024-10-30)
 ================
 
 - Drop support for Python 3.7.
