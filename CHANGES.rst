@@ -7,7 +7,7 @@
 
 - Drop support for Python 3.7.
 
-- Add preliminary support for Python 3.13 as of 3.13.rc1
+- Add support for Python 3.13.
 
 
 5.1 (2024-06-07)
@@ -15,7 +15,7 @@
 
 - Add support for Python 3.12.
 
-- Include code from PEP302 loaders in tracebacks
+- Include code from PEP302 loaders in tracebacks.
 
 
 5.0.1 (2023-07-11)
