@@ -23,7 +23,6 @@ import zipfile
 from urllib.error import HTTPError
 
 
-IS_PY38_OR_OLDER = sys.version_info < (3, 9)
 IS_PY312_OR_OLDER = sys.version_info < (3, 13)
 
 
@@ -741,7 +740,7 @@ class Test_format_exception(unittest.TestCase):
         # Recursion was detected
         self.assertIn(
             '(Recursive formatException() stopped, '
-                        'trying traceback.format_tb)',
+            'trying traceback.format_tb)',
             s,
             s
         )
@@ -775,10 +774,6 @@ class Test_format_exception(unittest.TestCase):
             module='zope.exceptions.tests.test_exceptionformatter',
             fn='test_format_exception_as_html',
         )
-        if IS_PY38_OR_OLDER:  # pragma: no cover
-            # Python <= 3.8 hand the pointer at the last character of the
-            # statement:
-            expected = expected.replace(' ^<br />', '^<br />')
         if IS_PY312_OR_OLDER:  # pragma: no cover
             # Python <= 3.12 had a different error message:
             expected = expected.replace(
