@@ -20,7 +20,6 @@
 """
 import os
 
-from setuptools import find_packages
 from setuptools import setup
 
 
@@ -63,9 +62,6 @@ setup(
         'Sources': 'https://github.com/zopefoundation/zope.exceptions',
     },
     license='ZPL-2.1',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
-    namespace_packages=['zope'],
     python_requires='>=3.9',
     install_requires=[
         'setuptools',
@@ -75,6 +71,6 @@ setup(
     zip_safe=False,
     extras_require={
         'docs': ['Sphinx', 'repoze.sphinx.autointerface'],
-        'test': ['zope.testrunner'],
+        'test': ['zope.testrunner >= 6.4'],
     },
 )
