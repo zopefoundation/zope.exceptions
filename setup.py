@@ -30,7 +30,7 @@ def read(*rnames):
 
 setup(
     name='zope.exceptions',
-    version='5.3.dev0',
+    version='6.0.dev0',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.dev',
     description='Zope Exceptions',
