@@ -23,6 +23,21 @@ from html import escape
 DEBUG_EXCEPTION_FORMATTER = 1
 
 
+class _FrameLineNumber:
+    """A minimal stand-in for a traceback object.
+
+    ``formatSupplement`` only ever looks at the ``tb_lineno`` attribute
+    of the traceback it is given, in order to resolve a supplement's
+    ``line == -1`` marker (meaning "use the current line"). When only a
+    frame is available, as is the case for ``extractStack()``, there is
+    no real traceback object to hand it, so we synthesize one exposing
+    just that attribute.
+    """
+
+    def __init__(self, lineno):
+        self.tb_lineno = lineno
+
+
 class TextExceptionFormatter:
 
     line_sep = '\n'
@@ -143,7 +158,12 @@ class TextExceptionFormatter:
             args = tbs[1:]
             try:
                 supp = factory(*args)
-                result.extend(self.formatSupplement(supp, tb))
+                # ``tb`` may be None here (formatLine was called with
+                # only a frame, e.g. from extractStack()); fall back to
+                # a stand-in exposing the frame's line number so that a
+                # supplement's ``line == -1`` marker can still resolve.
+                result.extend(self.formatSupplement(
+                    supp, tb if tb is not None else _FrameLineNumber(lineno)))
             except Exception:  # pragma: no cover
                 if DEBUG_EXCEPTION_FORMATTER:
                     traceback.print_exc()

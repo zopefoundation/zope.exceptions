@@ -11,6 +11,13 @@
 
 - Remove run-time dependency on ``setuptools``.
 
+- Fix ``AttributeError`` in ``extractStack()`` when a frame carries a
+  ``__traceback_supplement__`` whose ``line`` is ``-1`` (meaning "use
+  the current line"). Since ``extractStack()`` only has frames, not
+  traceback objects, resolving that marker now falls back to the
+  frame's line number instead of trying to read ``tb_lineno`` off of
+  ``None``.
+
 
 6.0 (2025-09-12)
 ================

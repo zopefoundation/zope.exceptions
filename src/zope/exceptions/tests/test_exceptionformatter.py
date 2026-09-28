@@ -423,6 +423,22 @@ class TextExceptionFormatterTests(unittest.TestCase):
         self.assertEqual(lines[0], '  Module dummy/filename.py, line 137, '
                                    'in dummy_function\n')
 
+    def test_extractStack_w_supplement_line_as_marker(self):
+        # extractStack() only has frames, not real traceback objects, so
+        # a supplement using `line = -1` to mean "use the current line"
+        # must fall back to the frame's line number instead of blowing
+        # up trying to read a non-existent `tb.tb_lineno`.
+        fmt = self._makeOne()
+        f = DummyFrame()
+        supplement = DummySupplement()
+        supplement.line = -1
+        f.f_locals['__traceback_supplement__'] = (lambda: supplement,)
+        lines = fmt.extractStack(f)
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(lines[0], '  Module dummy/filename.py, line 137, '
+                                   'in dummy_function\n'
+                                   '   - Line 137\n')
+
     def test_extractStack_w_multiple_frames_and_limit(self):
         fmt = self._makeOne(limit=2)
         f = self._makeFrames(10)
