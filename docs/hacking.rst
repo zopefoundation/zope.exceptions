@@ -111,12 +111,12 @@ you can see how well the tests cover the code:
    .........................................................................
    Name                                 Stmts   Miss  Cover   Missing
    ------------------------------------------------------------------
-   zope.exceptions                         10      0   100%   
-   zope.exceptions.exceptionformatter     171      0   100%   
-   zope.exceptions.interfaces              18      0   100%   
-   zope.exceptions.log                     13      0   100%   
+   zope.exceptions                         10      0   100%
+   zope.exceptions.exceptionformatter     171      0   100%
+   zope.exceptions.interfaces              18      0   100%
+   zope.exceptions.log                     13      0   100%
    ------------------------------------------------------------------
-   TOTAL                                  212      0   100%   
+   TOTAL                                  212      0   100%
    ----------------------------------------------------------------------
 
    OK
@@ -208,7 +208,7 @@ tool designed to run tests against multiple Python versions.  It creates
 a ``virtualenv`` for each configured version, installs the current package
 and configured dependencies into each ``virtualenv``, and then runs the
 configured commands.
-   
+
 :mod:`zope.exceptions` configures the following :mod:`tox` environments via
 its ``tox.ini`` file:
 
