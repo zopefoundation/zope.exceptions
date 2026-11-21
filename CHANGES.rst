@@ -5,6 +5,10 @@
 6.1 (unreleased)
 ================
 
+- Add support for Python 3.15.
+
+- Drop support for Python 3.10.
+
 - Add support for Python 3.14.
 
 - Drop support for Python 3.9.
@@ -163,7 +167,7 @@
 4.0.1 (2012-08-20)
 ==================
 
-- Fixed optional dependency code for `'zope.security`` to work under Python 3.3.
+- Fixed optional dependency code for ``zope.security`` to work under Python 3.3.
 
 
 4.0.0.1 (2012-05-16)
